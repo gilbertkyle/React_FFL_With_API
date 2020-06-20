@@ -38,17 +38,22 @@ export class LeagueIndex extends Component {
       <Fragment>
         <ul>
           {myLeagues.map((league, index) => (
-            <h1 key={index}>
+            <h3 key={index}>
               <Link key={league.id} to={`/${league.id}`}>
                 {league.name}
               </Link>
-            </h1>
+            </h3>
           ))}
         </ul>
       </Fragment>
     );
     const guestLinks = <h1>Log in!</h1>;
-    return <Fragment>{isAuthenticated ? authLinks : guestLinks}</Fragment>;
+    return (
+      <Fragment>
+        <h2>Check out a league!</h2>
+        {isAuthenticated ? authLinks : guestLinks}
+      </Fragment>
+    );
   }
 }
 

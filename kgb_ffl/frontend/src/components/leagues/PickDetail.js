@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import leagues from "../../reducers/leagues";
 import PickForm from "./PickForm";
 import WeekDetail from "./WeekDetail";
+import { Table, ButtonGroup } from "react-bootstrap";
 
 export class PickDetail extends Component {
   constructor(props) {
@@ -29,15 +30,13 @@ export class PickDetail extends Component {
     }
     let leaguePicks = [];
     if (this.props.picks) {
-      leaguePicks = this.props.picks.filter(
-        pick => pick.week == this.state.week
-      );
+      leaguePicks = this.props.picks.filter(pick => pick.week == this.state.week);
     }
 
     const pickForm = <PickForm key={this.state.week} week={this.state.week} />;
     const otherStuff = (
       <Fragment>
-        <table className="table table-bordered table-hover">
+        <Table responsive striped bordered hover>
           <thead>
             <tr>
               <th>User</th>
@@ -74,13 +73,13 @@ export class PickDetail extends Component {
               </tr>
             ))}
           </tbody>
-        </table>
+        </Table>
       </Fragment>
     );
 
     return (
-      <div>
-        <div className="btn-group" style={{ alignContent: "center" }}>
+      <div className="container-fluid">
+        <ButtonGroup size="sm" className="flex-wrap">
           {weeks.map((week, index) => (
             <button
               key={index}
@@ -90,7 +89,7 @@ export class PickDetail extends Component {
               {week}
             </button>
           ))}
-        </div>
+        </ButtonGroup>
         <h1>Week: {this.state.week}</h1>
         {this.state.week == this.props.week ? pickForm : otherStuff}
       </div>
