@@ -5,16 +5,15 @@ import styled from "styled-components";
 
 const Styles = styled.div`
   .jumbo {
-    background: url(${"../../../static/frontend/pats_cowboys.jpg"}) no-repeat fixed bottom;
     background-size: hover;
     height: 200px;
     position: relative;
     z-index: -2;
+    opacity: 0.5;
   }
 
   .overlay {
     background-color: #000;
-    opacity: 0.2;
     position: absolute;
     top: 0;
     left: 0;
@@ -22,8 +21,8 @@ const Styles = styled.div`
     right: 0;
     z-index: -1;
   }
-  .overlay h1,
-  .overlay p {
+  overlay h1,
+  overlay p {
     color: #fff;
   }
 `;

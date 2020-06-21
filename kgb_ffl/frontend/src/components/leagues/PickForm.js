@@ -19,7 +19,6 @@ export class PickForm extends Component {
 
   onSubmit = e => {
     e.preventDefault();
-    console.log(this.state);
     const { qb, rb, wr, te, defense } = this.state;
     const picks = {
       qb,
@@ -28,9 +27,9 @@ export class PickForm extends Component {
       te,
       defense
     };
-    const pickId = this.props.picks.filter(
-      pick => pick.week === this.props.week
-    )[0].id;
+
+    //const pickId = this.props.picks.filter(pick => pick.week == this.props.week);
+    const pickId = this.props.picks.filter(pick => pick.week == 16)[0].id;
     console.log(pickId);
     this.props.updatePick(pickId, picks);
   };

@@ -43,6 +43,13 @@ class LeagueSerializer(serializers.ModelSerializer):
         }
 
 
+class UpdatePickSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pick
+        fields = "__all__"
+        depth = 1
+
+
 class PickSerializer(serializers.ModelSerializer):
     user = UserSerializer()
 

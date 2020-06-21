@@ -1,7 +1,7 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import CreateLeagueSerializer, LeagueSerializer, LeagueAdminSerializer, PickSerializer, PlayerSerializer, PlayerWeekSerializer, UserSerializer, JoinLeagueSerializer
+from .serializers import CreateLeagueSerializer, LeagueSerializer, LeagueAdminSerializer, PickSerializer, PlayerSerializer, PlayerWeekSerializer, UserSerializer, JoinLeagueSerializer, UpdatePickSerializer
 from .models import League, LeagueYear, Pick, Player, PlayerWeek
 from rest_framework.decorators import api_view
 import datetime
@@ -43,9 +43,9 @@ class UpdatePicks(generics.RetrieveUpdateAPIView):
         if updating, put pick info in body of request
         if retrieving, put pick.pk in url
 
-        Tested and working as of 4/15
+        Tested and working as of 6/21
     """
-    serializer_class = PickSerializer
+    serializer_class = UpdatePickSerializer
     lookup_field = 'id'
 
     def get_queryset(self):

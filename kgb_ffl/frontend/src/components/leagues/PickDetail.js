@@ -36,7 +36,7 @@ export class PickDetail extends Component {
     const pickForm = <PickForm key={this.state.week} week={this.state.week} />;
     const otherStuff = (
       <Fragment>
-        <Table responsive striped bordered hover>
+        <Table responsive striped bordered hover size="sm">
           <thead>
             <tr>
               <th>User</th>
@@ -90,7 +90,7 @@ export class PickDetail extends Component {
             </button>
           ))}
         </ButtonGroup>
-        <h1>Week: {this.state.week}</h1>
+        <h3>Week: {this.state.week}</h3>
         {this.state.week == this.props.week ? pickForm : otherStuff}
       </div>
     );

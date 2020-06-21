@@ -4,6 +4,7 @@ import { retrievePicks } from "../../actions/league";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { PickForm } from "./PickForm";
+import { Table } from "react-bootstrap";
 
 export class Picks extends Component {
   componentDidMount() {}
@@ -15,7 +16,7 @@ export class Picks extends Component {
     }
 
     return (
-      <table className="table table-bordered table-hover">
+      <Table responsive striped bordered hover size="sm">
         <thead>
           <tr>
             <th>Week</th>
@@ -29,11 +30,12 @@ export class Picks extends Component {
             <th>TE Points</th>
             <th>Defense</th>
             <th>Defense Points</th>
+            <th>Total Points </th>
           </tr>
         </thead>
-        {myPicks.map((pick, index) => (
-          <tbody key={index}>
-            <tr>
+        <tbody>
+          {myPicks.map((pick, index) => (
+            <tr key={index}>
               <td>{pick.week}</td>
               <td>{pick.qb}</td>
               <td>{pick.qb_points}</td>
@@ -45,10 +47,11 @@ export class Picks extends Component {
               <td>{pick.te_points}</td>
               <td>{pick.defense}</td>
               <td>{pick.def_points}</td>
+              <td>{pick.total_points}</td>
             </tr>
-          </tbody>
-        ))}
-      </table>
+          ))}
+        </tbody>
+      </Table>
     );
   }
 }

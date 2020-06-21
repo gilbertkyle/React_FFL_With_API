@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
+import { Table } from "react-bootstrap";
 
 export class WeekDetail extends Component {
   state = {
@@ -14,14 +15,12 @@ export class WeekDetail extends Component {
   render() {
     let leaguePicks = [];
     if (this.props.picks) {
-      leaguePicks = this.props.picks.filter(
-        pick => pick.week === this.props.week
-      );
+      leaguePicks = this.props.picks.filter(pick => pick.week === this.props.week);
     }
     return (
       <Fragment key={this.props.week}>
         <p key={this.props.week}>{this.props.week}</p>
-        <table>
+        <Table responsive striped bordered hover size="sm">
           <thead>
             <tr>
               <th>User</th>
@@ -36,6 +35,7 @@ export class WeekDetail extends Component {
               <th>TE Points</th>
               <th>Defense</th>
               <th>Defense Points</th>
+              <th>Total Points</th>
             </tr>
           </thead>
           <tbody>
@@ -57,7 +57,7 @@ export class WeekDetail extends Component {
               </tr>
             ))}
           </tbody>
-        </table>
+        </Table>
       </Fragment>
     );
   }
