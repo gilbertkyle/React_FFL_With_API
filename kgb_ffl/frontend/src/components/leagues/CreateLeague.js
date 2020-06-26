@@ -31,7 +31,6 @@ export class CreateLeague extends Component {
         password,
         user_id
       };
-      console.log(newLeague);
       this.props.registerLeague(newLeague);
     }
   };

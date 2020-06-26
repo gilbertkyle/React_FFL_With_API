@@ -6,7 +6,7 @@ import { retrieveLeagues } from "../../actions/league";
 import { connect } from "react-redux";
 import { createMessage } from "../../actions/messages";
 import { Home } from "./Home";
-//import mainImage from "../../../static/frontend/49ers.jpg";
+import FootballNavbar from "../layout/FootballNavbar";
 
 export class LeagueIndex extends Component {
   static proptypes = {
@@ -28,7 +28,6 @@ export class LeagueIndex extends Component {
   componentDidUpdate(prevProps) {}
 
   render() {
-    //console.log(mainImage);
     const { isAuthenticated } = this.props.auth;
     let myLeagues = [];
     if (this.props.leagues.leagues !== null) {

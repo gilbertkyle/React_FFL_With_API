@@ -1,29 +1,35 @@
 import React, { Component } from "react";
 import { Jumbotron as Jumbo, Container } from "react-bootstrap";
-//import mainImage from "../../../static/frontend/49ers.jpg";
 import styled from "styled-components";
+import FootballNavbar from "./FootballNavbar";
 
 const Styles = styled.div`
   .jumbo {
-    background-size: hover;
     height: 200px;
     position: relative;
-    z-index: -2;
-    opacity: 0.5;
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.4);
   }
 
   .overlay {
-    background-color: #000;
     position: absolute;
     top: 0;
     left: 0;
     bottom: 0;
     right: 0;
-    z-index: -1;
+    z-index: 1;
   }
-  overlay h1,
-  overlay p {
-    color: #fff;
+
+  .container {
+    width: 100%;
+  }
+
+  .navbar {
+    position: absolute;
+    bottom: 0;
+    border: 1px solid #000;
+    width: 100%;
+    margin-left: -30px;
   }
 `;
 
@@ -31,11 +37,11 @@ export class Jumbotron extends Component {
   render() {
     return (
       <Styles>
-        <Jumbo fluid className="jumbo">
-          <div className="overlay">
+        <Jumbo className="jumbo">
+          <div className="overlay container">
+            <p>Hello</p>
             <Container>
-              <h1>Welcome</h1>
-              <p>Play Fantasy Football</p>
+              <FootballNavbar />
             </Container>
           </div>
         </Jumbo>
