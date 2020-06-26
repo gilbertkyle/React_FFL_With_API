@@ -22,6 +22,7 @@ const Styles = styled.div`
 
   .container {
     width: 100%;
+    padding: 0px;
   }
 
   .navbar {
@@ -29,7 +30,6 @@ const Styles = styled.div`
     bottom: 0;
     border: 1px solid #000;
     width: 100%;
-    margin-left: -30px;
   }
 `;
 
