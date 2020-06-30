@@ -58,9 +58,10 @@ class CreateLeagueAPI(generics.CreateAPIView):
     """
         Creates a league and adds the creator to the admin list
     """
-    serializer_class = LeagueAdminSerializer
+    serializer_class = CreateLeagueSerializer
 
-    def perform_create(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs):
+        print(request.data)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         league = serializer.save()
