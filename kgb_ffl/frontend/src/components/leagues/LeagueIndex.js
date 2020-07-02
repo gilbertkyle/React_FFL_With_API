@@ -29,10 +29,12 @@ export class LeagueIndex extends Component {
 
   render() {
     const { isAuthenticated } = this.props.auth;
+    const { leagues } = this.props.leagues;
     let myLeagues = [];
     if (this.props.leagues.leagues !== null) {
       myLeagues = this.props.leagues.leagues;
     }
+
     const authLinks = (
       <Fragment>
         <ul>
@@ -49,7 +51,7 @@ export class LeagueIndex extends Component {
     const guestLinks = <h1>Log in!</h1>;
     return (
       <Fragment>
-        <h2>Check out a league!</h2>
+        { ? <h3>Choose a league</h3> : <h3>Join a league</h3>}
         {isAuthenticated ? authLinks : guestLinks}
       </Fragment>
     );

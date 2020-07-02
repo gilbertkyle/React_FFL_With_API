@@ -15,7 +15,8 @@ import {
 
 const initialState = {
   leagues: null,
-  leagueLoading: false
+  leagueLoading: false,
+  leagueCreated: false
 };
 
 export default function(state = initialState, action) {
@@ -34,8 +35,9 @@ export default function(state = initialState, action) {
     case LEAGUE_CREATE_SUCCESS:
       return {
         ...state,
-        leagues: action.payload,
-        leagueLoading: false
+        leagues: [...state.leagues, action.payload],
+        leagueLoading: false,
+        leagueCreated: true
       };
     case LEAGUE_RETRIEVE_SUCCESS:
       return {

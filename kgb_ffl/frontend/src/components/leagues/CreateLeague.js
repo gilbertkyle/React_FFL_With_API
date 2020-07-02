@@ -4,15 +4,26 @@ import { createMessage } from "../../actions/messages";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { registerLeague } from "../../actions/league";
+import { Redirect } from "react-router-dom";
 
 export class CreateLeague extends Component {
-  state = {
-    name: "",
-    password: "",
-    password2: ""
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: "",
+      password: "",
+      password2: "",
+      leagueCreated: props.leagueCreated
+    };
+  }
 
   componentDidMount() {}
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.leagueCreated !== this.props.leagueCreated) {
+      this.props.history.push("/");
+    }
+  }
 
   static propTypes = {
     registerLeague: PropTypes.func.isRequired,
@@ -84,10 +95,14 @@ export class CreateLeague extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  user: state.auth.user
-});
+const mapStateToProps = state => {
+  console.log(state.leagues.leagueCreated);
+  return {
+    isAuthenticated: state.auth.isAuthenticated,
+    user: state.auth.user,
+    leagueCreated: state.leagues.leagueCreated
+  };
+};
 
 export default connect(
   mapStateToProps,

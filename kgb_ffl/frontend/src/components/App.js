@@ -52,7 +52,7 @@ class App extends React.Component {
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/register" component={Register} />
                 <PrivateRoute path="/league/create" component={CreateLeague} exact />
-                <PrivateRoute path="/" exact component={LeagueIndex} />
+                <PrivateRoute path="/" exact component={() => <LeagueIndex />} />
                 <PrivateRoute path="/league/join" component={JoinLeague} />
                 <PrivateRoute exact path="/:id" component={Home} />
                 <PrivateRoute exact path="/:id/picks" component={PickDetail} name="pick-detail" />

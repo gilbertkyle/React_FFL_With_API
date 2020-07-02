@@ -29,20 +29,6 @@ class DefenseSerializer(serializers.ModelSerializer):
         fields = ['team']
 
 
-class LeagueSerializer(serializers.ModelSerializer):
-    admins = UserSerializer(many=True, required=False)
-    users = UserSerializer(many=True)
-
-    class Meta:
-        model = League
-        fields = ['id', 'name', 'password', 'admins', 'users']
-        extra_kwargs = {
-            'password': {
-                'write_only': True
-            }
-        }
-
-
 class UpdatePickSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pick
@@ -57,6 +43,32 @@ class PickSerializer(serializers.ModelSerializer):
         model = Pick
         fields = '__all__'
         depth = 1
+
+
+class LeagueSerializer(serializers.ModelSerializer):
+    admins = UserSerializer(many=True, required=False)
+    users = UserSerializer(many=True, required=False)
+
+    class Meta:
+        model = League
+        fields = ['id', 'name', 'password', 'admins', 'users']
+        read_only_fields = ['id']
+        extra_kwargs = {
+            'password': {
+                'write_only': True
+            }
+        }
+
+    def create(self, validated_data):
+        league = League.objects.create(
+            name=validated_data['name'],
+            password=make_password(validated_data['password'])
+        )
+        league.save()
+        print(validated_data)
+        league.admins.add(User.objects.get(pk=validated_data['user_id']))
+        league.save()
+        return league
 
 
 class LeagueAdminSerializer(serializers.Serializer):
@@ -87,22 +99,27 @@ class LeagueAdminSerializer(serializers.Serializer):
 
 
 class CreateLeagueSerializer(serializers.ModelSerializer):
-    admins = LeagueAdminSerializer(many=True)
+    user_id = serializers.IntegerField()
 
     class Meta:
         model = League
-        fields = ['name', 'password', 'admins']
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ['name', 'password', 'user_id']
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
 
     def create(self, validated_data):
-        validated_data['password'] = make_password(validated_data['password'])
+        hashed_password = make_password(validated_data['password'])
         league = League.objects.create(
             name=validated_data['name'],
-            password=validated_data['password']
+            password=hashed_password
         )
-        league.admins.add(User.objects.get(pk=validated_data['admins']))
+        league.admins.add(User.objects.get(pk=validated_data['user_id']))
         league.save()
         return league
+
+    def validate_password(self, value):
+        return value
 
 
 class JoinLeagueSerializer(serializers.ModelSerializer):

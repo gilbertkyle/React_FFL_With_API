@@ -81,7 +81,7 @@ export const retrieveMyPicks = (leagueId, username) => dispatch => {
 };
 
 export const retrieveLeagues = username => dispatch => {
-  //dispatch({ type: LEAGUE_LOADING });
+  dispatch({ type: LEAGUE_LOADING });
 
   const config = {
     headers: {
