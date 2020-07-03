@@ -11,6 +11,7 @@ django = "*"
 djangorestframework = "*"
 django-rest-knox = "*"
 nflgame-redux = "==2.0.1b1"
+requests = "*"
 
 [requires]
 python_version = "3.7"
