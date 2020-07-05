@@ -51,7 +51,7 @@ export class LeagueIndex extends Component {
     const guestLinks = <h1>Log in!</h1>;
     return (
       <Fragment>
-        { ? <h3>Choose a league</h3> : <h3>Join a league</h3>}
+        {myLeagues.length > 0 ? <h3>Choose a league</h3> : <h3>Join a league</h3>}
         {isAuthenticated ? authLinks : guestLinks}
       </Fragment>
     );

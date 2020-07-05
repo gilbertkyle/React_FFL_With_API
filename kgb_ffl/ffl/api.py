@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view
 import datetime
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
+from rest_framework import status
 
 User = get_user_model()
 
@@ -100,7 +101,7 @@ class JoinLeagueAPI(generics.UpdateAPIView):
                 'leagues': LeagueSerializer(league, context=self.get_serializer_context()).data
             })
         else:
-            print('no dice')
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class ListLeagueAPI(generics.ListAPIView):

@@ -39,7 +39,6 @@ export class Jumbotron extends Component {
       <Styles>
         <Jumbo className="jumbo">
           <div className="overlay container">
-            <p>Hello</p>
             <Container>
               <FootballNavbar />
             </Container>

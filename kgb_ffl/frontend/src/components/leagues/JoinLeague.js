@@ -5,10 +5,14 @@ import { createMessage } from "../../actions/messages";
 import { joinLeague } from "../../actions/league";
 
 export class JoinLeague extends Component {
-  state = {
-    name: "",
-    password: ""
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: "",
+      password: "",
+      leaguesUpdated: props.leaguesUpdated
+    };
+  }
 
   static propTypes = {
     joinLeague: PropTypes.func.isRequired
@@ -18,15 +22,14 @@ export class JoinLeague extends Component {
     e.preventDefault();
     const { name, password } = this.state;
     const user_id = this.props.user.id;
-    /*
-    const league = {
-      name,
-      password,
-      user
-    };
-    */
     this.props.joinLeague(name, password, user_id);
   };
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.leaguesUpdated !== this.props.leaguesUpdated) {
+      this.props.history.push("/");
+    }
+  }
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
@@ -68,7 +71,8 @@ export class JoinLeague extends Component {
 
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
-  user: state.auth.user
+  user: state.auth.user,
+  leaguesUpdated: state.leagues.leaguesUpdated
 });
 
 export default connect(

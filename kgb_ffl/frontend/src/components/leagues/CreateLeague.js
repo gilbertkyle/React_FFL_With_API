@@ -13,14 +13,14 @@ export class CreateLeague extends Component {
       name: "",
       password: "",
       password2: "",
-      leagueCreated: props.leagueCreated
+      leaguesUpdated: props.leagueCreated
     };
   }
 
   componentDidMount() {}
 
   componentDidUpdate(prevProps) {
-    if (prevProps.leagueCreated !== this.props.leagueCreated) {
+    if (prevProps.leaguesUpdated !== this.props.leaguesUpdated) {
       this.props.history.push("/");
     }
   }
@@ -42,6 +42,7 @@ export class CreateLeague extends Component {
         password,
         user_id
       };
+
       this.props.registerLeague(newLeague);
     }
   };
@@ -96,11 +97,10 @@ export class CreateLeague extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state.leagues.leagueCreated);
   return {
     isAuthenticated: state.auth.isAuthenticated,
     user: state.auth.user,
-    leagueCreated: state.leagues.leagueCreated
+    leaguesUpdated: state.leagues.leaguesUpdated
   };
 };
 
