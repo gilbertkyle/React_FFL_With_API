@@ -7,9 +7,16 @@ from rest_framework.decorators import api_view
 import datetime
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
-from rest_framework import status
+from rest_framework import status, viewsets
+from ffl import ffl_settings
 
 User = get_user_model()
+
+
+class PlayerViewSet(viewsets.ReadOnlyModelViewSet):
+
+    queryset = Player.objects.all()
+    serializer_class = PlayerSerializer
 
 
 class ListPicks(generics.ListAPIView):
@@ -62,7 +69,6 @@ class CreateLeagueAPI(generics.CreateAPIView):
     serializer_class = CreateLeagueSerializer
 
     def create(self, request, *args, **kwargs):
-        print(request.data)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         league = serializer.save()
@@ -88,7 +94,6 @@ class JoinLeagueAPI(generics.UpdateAPIView):
     queryset = League.objects.all()
 
     def update(self, request, *args, **kwargs):
-        print(request.data)
         league = League.objects.get(name=request.data['name'])
         user = User.objects.get(id=request.data['user_id'])
         if check_password(request.data['password'], league.password):
@@ -175,12 +180,12 @@ def get_week():
     Returns the current week of the NFL
     Set the base week to 7 days before Week 1 Sunday
     """
-    base_week = datetime.datetime(2019, 9, 3, 10, 0, 0)
+    base_week = ffl_settings.BASE_DATE
     today = datetime.datetime.now()
     diff = today - base_week
     current_week = int(diff.days/7) if diff.days >= 0 else 1
-    if current_week > 17:
-        return 17
+    if current_week > ffl_settings.NUMBER_OF_WEEKS:
+        return ffl_settings.NUMBER_OF_WEEKS
     elif current_week < 1:
         return 1
     return current_week

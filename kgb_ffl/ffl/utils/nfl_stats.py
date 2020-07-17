@@ -12,11 +12,12 @@ def current_week():
     current_week = int(diff.days/7) if diff.days >= 0 else 1
     return current_week
 
+"""
 if __name__ == "__main__":
     for i in range(18):
         updater = Updater(week=i, year=2019)
         updater.update()
-
+"""
 
 class Updater:
     """

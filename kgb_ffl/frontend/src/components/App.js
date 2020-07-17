@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import ReactDOM from "react-dom";
 
-import { HashRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 
 import Header from "./layout/Header";
 import Players from "./players/Players";
@@ -15,6 +15,7 @@ import Home from "./leagues/Home";
 import LeagueIndex from "./leagues/LeagueIndex";
 import PrivateRoute from "./common/PrivateRoute";
 import PickDetail from "./leagues/PickDetail";
+import SearchPlayerContainer from "./leagues/SearchPlayerContainer";
 import { Jumbotron } from "./layout/Jumbotron";
 
 import { Container } from "react-bootstrap";
@@ -51,6 +52,7 @@ class App extends React.Component {
               <Switch>
                 <Route exact path="/login" component={Login} />
                 <Route exact path="/register" component={Register} />
+                <Route path="/search" component={SearchPlayerContainer} />
                 <PrivateRoute path="/league/create" component={CreateLeague} exact />
                 <PrivateRoute path="/" exact component={() => <LeagueIndex />} />
                 <PrivateRoute path="/league/join" component={JoinLeague} />

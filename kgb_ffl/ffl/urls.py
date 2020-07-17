@@ -1,6 +1,13 @@
 from django.urls import path, include
 from .api import *
 
+list_players = PlayerViewSet.as_view({
+    'get': 'list'
+})
+get_player = PlayerViewSet.as_view({
+    'get': 'list'
+})
+
 
 urlpatterns = [
     path('api/league/register', CreateLeagueAPI.as_view()),
@@ -11,5 +18,5 @@ urlpatterns = [
     path('api/picks', ListPicks.as_view()),
     path('api/picks/<int:id>', UpdatePicks.as_view()),
     path('api/players', ListPlayerAPI.as_view()),
-    path('api/players/<str:name>', RetrievePlayerAPI.as_view()),
+    path('api/players/<str:name>', RetrievePlayerAPI.as_view())
 ]

@@ -5,6 +5,7 @@ from collections import Counter
 from .models import *
 
 
+
 def current_week():
     base_week = datetime.datetime(2019, 9, 1, 10, 0, 0)
     today = datetime.datetime.now()

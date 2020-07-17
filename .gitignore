@@ -9,6 +9,7 @@ node_modules
 /mediafiles/*
 __pycache__/
 /.vscode/
+local_settings.py
 
 # coverage result
 .coverage
