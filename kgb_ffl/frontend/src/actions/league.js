@@ -22,6 +22,7 @@ export const updatePick = (pickId, picks) => dispatch => {
   };
 
   const body = JSON.stringify(picks);
+  console.log(pickId);
 
   axios
     .put(`/api/picks/${pickId}`, body, config)

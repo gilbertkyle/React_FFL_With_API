@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { createMessage } from "../../actions/messages";
 import { updatePick } from "../../actions/league";
+import { Redirect, withRouter } from "react-router-dom";
 
 export class PickForm extends Component {
   state = {
@@ -28,15 +29,18 @@ export class PickForm extends Component {
       defense
     };
 
-    //const pickId = this.props.picks.filter(pick => pick.week == this.props.week);
-    const pickId = this.props.picks.filter(pick => pick.week == 16)[0].id;
-    console.log(pickId);
+    const pickId = this.props.picks.filter(pick => pick.week == this.props.week)[0].id;
+    //const pickId = this.props.picks.filter(pick => pick.week == 17)[0].id;
     this.props.updatePick(pickId, picks);
   };
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
   render() {
+    console.log(this.props.match);
+    if (this.props.pickSubmitted) {
+      return <Redirect to={`/${this.props.match.params.id}`} />;
+    }
     const { qb, rb, wr, te, defense } = this.state;
     return (
       <Fragment>
@@ -109,10 +113,11 @@ export class PickForm extends Component {
 
 const mapStateToProps = state => ({
   user: state.auth.user,
-  picks: state.leagues.picks
+  picks: state.leagues.myPicks,
+  pickSubmitted: state.leagues.pickSubmitted
 });
 
 export default connect(
   mapStateToProps,
   { createMessage, updatePick }
-)(PickForm);
+)(withRouter(PickForm));

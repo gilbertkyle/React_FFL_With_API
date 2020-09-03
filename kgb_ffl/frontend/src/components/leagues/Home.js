@@ -30,10 +30,7 @@ export class Home extends Component {
         this.setState({ leagueName: myJson.name });
       });
     this.props.retrievePicks(this.props.match.params.id, this.props.week);
-    this.props.retrieveMyPicks(
-      this.props.match.params.id,
-      this.props.user.username
-    );
+    this.props.retrieveMyPicks(this.props.match.params.id, this.props.user.username);
   }
 
   render() {
