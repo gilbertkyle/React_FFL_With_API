@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import { retrievePicks, retrieveMyPicks } from "../../actions/league";
 import { Link } from "react-router-dom";
 import PickForm from "./Picks";
+import { PICK_RELOAD } from "../../actions/types";
 
 export class Home extends Component {
   constructor(props) {
@@ -31,6 +32,9 @@ export class Home extends Component {
       });
     this.props.retrievePicks(this.props.match.params.id, this.props.week);
     this.props.retrieveMyPicks(this.props.match.params.id, this.props.user.username);
+    if (this.props.pickSubmitted) {
+      this.props.reloadPicks();
+    }
   }
 
   render() {
@@ -48,10 +52,17 @@ const mapStateToProps = state => ({
   user: state.auth.user,
   week: state.leagues.week,
   picks: state.leagues.picks,
-  myPicks: state.leagues.myPicks
+  myPicks: state.leagues.myPicks,
+  pickSubmitted: state.leagues.pickSubmitted
+});
+
+const mapDispatchToProps = dispatch => ({
+  retrievePicks: (id, week) => dispatch(retrievePicks(id, week)),
+  retrieveMyPicks: (id, username) => dispatch(retrieveMyPicks(id, username)),
+  reloadPicks: () => dispatch({ type: PICK_RELOAD })
 });
 
 export default connect(
   mapStateToProps,
-  { retrievePicks, retrieveMyPicks }
+  mapDispatchToProps
 )(Home);

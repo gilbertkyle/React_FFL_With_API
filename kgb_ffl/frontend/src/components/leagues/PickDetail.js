@@ -25,7 +25,7 @@ export class PickDetail extends Component {
 
   render() {
     let weeks = [];
-    for (let i = 1; i < 18; i++) {
+    for (let i = 1; i < this.props.week; i++) {
       weeks.push(i);
     }
     let leaguePicks = [];

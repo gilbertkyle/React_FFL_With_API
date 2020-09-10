@@ -59,7 +59,25 @@ class UpdatePicks(generics.RetrieveUpdateAPIView):
     def get_queryset(self):
         return Pick.objects.all()
 
-    # def perform_update(self, request, *args, **kwargs):
+    def update(self, request, *args, **kwargs):
+        pick = Pick.objects.get(id=self.kwargs['id'])
+        new_picks = request.data
+        pick.qb = new_picks['qb']['name']
+        pick.qb_id = new_picks['qb']['id']
+        pick.rb = new_picks['rb']['name']
+        pick.rb_id = new_picks['rb']['id']
+        pick.wr = new_picks['wr']['name']
+        pick.wr_id = new_picks['wr']['id']
+        pick.te = new_picks['te']['name']
+        pick.te_id = new_picks['te']['id']
+        pick.defense = new_picks['defense']['name']
+        pick.defense_id = new_picks['defense']['id']
+        pick.save()
+        return Response()
+
+    def partial_update(self, request, *args, **kwargs):
+        print("partial update")
+        return Response()
 
 
 class CreateLeagueAPI(generics.CreateAPIView):
@@ -129,6 +147,11 @@ class RetrieveLeagueAPI(generics.RetrieveAPIView):
         return League.objects.filter(id=id)
 
 
+class PlayerViewSet(viewsets.ModelViewSet):
+    queryset = Player.objects.all()
+    serializer_class = PlayerSerializer
+
+
 class RetrievePlayerAPI(generics.RetrieveAPIView):
     serializer_class = PlayerSerializer
 
@@ -157,7 +180,7 @@ class ListPlayerWeekAPI(generics.ListAPIView):
     def get_queryset(self):
         nfl_id = self.kwargs.get('nfl_id', '')
         if nfl_id:
-            return Player.objects.get(nfl_id=nfl_id).week.all()
+            return Player.objects.get(id=nfl_id).week.all()
         return PlayerWeek.objects.none()
 
 

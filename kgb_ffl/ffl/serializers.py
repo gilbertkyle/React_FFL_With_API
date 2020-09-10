@@ -12,7 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
 class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
-        fields = ['nfl_id', 'name', 'team', 'position']
+        fields = ['id', 'name', 'team', 'position', 'weeks']
         depth = 1
 
 
@@ -29,11 +29,22 @@ class DefenseSerializer(serializers.ModelSerializer):
         fields = ['team']
 
 
+class UpdatePickSerializer(serializers.Serializer):
+    qb = PlayerSerializer()
+    rb = PlayerSerializer()
+    wr = PlayerSerializer()
+    te = PlayerSerializer()
+    defense = PlayerSerializer()
+
+
+"""
 class UpdatePickSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Pick
         fields = "__all__"
         depth = 1
+"""
 
 
 class PickSerializer(serializers.ModelSerializer):
