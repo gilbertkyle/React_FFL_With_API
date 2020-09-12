@@ -7,9 +7,16 @@ from rest_framework.decorators import api_view
 import datetime
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
-from rest_framework import status
+from rest_framework import status, viewsets
+from ffl import ffl_settings
 
 User = get_user_model()
+
+
+class PlayerViewSet(viewsets.ReadOnlyModelViewSet):
+
+    queryset = Player.objects.all()
+    serializer_class = PlayerSerializer
 
 
 class ListPicks(generics.ListAPIView):
@@ -52,7 +59,25 @@ class UpdatePicks(generics.RetrieveUpdateAPIView):
     def get_queryset(self):
         return Pick.objects.all()
 
-    # def perform_update(self, request, *args, **kwargs):
+    def update(self, request, *args, **kwargs):
+        pick = Pick.objects.get(id=self.kwargs['id'])
+        new_picks = request.data
+        pick.qb = new_picks['qb']['name']
+        pick.qb_id = new_picks['qb']['id']
+        pick.rb = new_picks['rb']['name']
+        pick.rb_id = new_picks['rb']['id']
+        pick.wr = new_picks['wr']['name']
+        pick.wr_id = new_picks['wr']['id']
+        pick.te = new_picks['te']['name']
+        pick.te_id = new_picks['te']['id']
+        pick.defense = new_picks['defense']['name']
+        pick.defense_id = new_picks['defense']['id']
+        pick.save()
+        return Response()
+
+    def partial_update(self, request, *args, **kwargs):
+        print("partial update")
+        return Response()
 
 
 class CreateLeagueAPI(generics.CreateAPIView):
@@ -62,7 +87,6 @@ class CreateLeagueAPI(generics.CreateAPIView):
     serializer_class = CreateLeagueSerializer
 
     def create(self, request, *args, **kwargs):
-        print(request.data)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         league = serializer.save()
@@ -88,7 +112,6 @@ class JoinLeagueAPI(generics.UpdateAPIView):
     queryset = League.objects.all()
 
     def update(self, request, *args, **kwargs):
-        print(request.data)
         league = League.objects.get(name=request.data['name'])
         user = User.objects.get(id=request.data['user_id'])
         if check_password(request.data['password'], league.password):
@@ -124,6 +147,11 @@ class RetrieveLeagueAPI(generics.RetrieveAPIView):
         return League.objects.filter(id=id)
 
 
+class PlayerViewSet(viewsets.ModelViewSet):
+    queryset = Player.objects.all()
+    serializer_class = PlayerSerializer
+
+
 class RetrievePlayerAPI(generics.RetrieveAPIView):
     serializer_class = PlayerSerializer
 
@@ -152,7 +180,7 @@ class ListPlayerWeekAPI(generics.ListAPIView):
     def get_queryset(self):
         nfl_id = self.kwargs.get('nfl_id', '')
         if nfl_id:
-            return Player.objects.get(nfl_id=nfl_id).week.all()
+            return Player.objects.get(id=nfl_id).week.all()
         return PlayerWeek.objects.none()
 
 
@@ -175,12 +203,12 @@ def get_week():
     Returns the current week of the NFL
     Set the base week to 7 days before Week 1 Sunday
     """
-    base_week = datetime.datetime(2019, 9, 3, 10, 0, 0)
+    base_week = ffl_settings.BASE_DATE
     today = datetime.datetime.now()
     diff = today - base_week
     current_week = int(diff.days/7) if diff.days >= 0 else 1
-    if current_week > 17:
-        return 17
+    if current_week > ffl_settings.NUMBER_OF_WEEKS:
+        return ffl_settings.NUMBER_OF_WEEKS
     elif current_week < 1:
         return 1
     return current_week

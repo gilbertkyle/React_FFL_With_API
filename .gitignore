@@ -9,6 +9,7 @@ node_modules
 /mediafiles/*
 __pycache__/
 /.vscode/
+local_settings.py
 
 # coverage result
 .coverage
@@ -47,4 +48,4 @@ spritesmith-generated/
 spritesmith.scss
 
 # templated email
-tmp_email/
+tmp_email/*.sqlite3

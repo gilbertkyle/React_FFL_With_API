@@ -10,13 +10,15 @@ import {
   LOAD_WEEK,
   PICK_RETRIEVE_SUCCESS,
   PICK_UPDATE_SUCCESS,
-  USER_PICK_RETRIEVE_SUCCESS
+  USER_PICK_RETRIEVE_SUCCESS,
+  PICK_RELOAD
 } from "../actions/types";
 
 const initialState = {
   leagues: null,
   leagueLoading: false,
-  leaguesUpdated: false
+  leaguesUpdated: false,
+  pickSubmitted: false
 };
 
 export default function(state = initialState, action) {
@@ -63,7 +65,13 @@ export default function(state = initialState, action) {
       };
     case PICK_UPDATE_SUCCESS:
       return {
-        ...state
+        ...state,
+        pickSubmitted: true
+      };
+    case PICK_RELOAD:
+      return {
+        ...state,
+        pickSubmitted: false
       };
     case LEAGUE_RETRIEVE_FAIL:
     case LEAGUE_CREATE_FAIL:

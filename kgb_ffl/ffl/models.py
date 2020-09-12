@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 import datetime
-#from .accounts import User
+#from accounts.models import User
 User = get_user_model()
 
 # Create your models here.
@@ -88,8 +88,8 @@ class Pick(models.Model):
 
 
 class Player(models.Model):
-    nfl_id = models.CharField('NFL ID', max_length=20,
-                              unique=True, primary_key=True)
+    id = models.CharField('id', max_length=10,
+                          unique=True, primary_key=True)
     name = models.CharField('Name', max_length=30)
     position = models.CharField('Position', max_length=5, default="")
     team = models.CharField('Team', max_length=5, default="")
@@ -100,10 +100,12 @@ class Player(models.Model):
 
 class PlayerWeek(models.Model):
     player = models.ForeignKey(
-        Player, to_field="nfl_id", on_delete=models.CASCADE, related_name="week", null=False)
+        Player, to_field="id", on_delete=models.CASCADE, related_name="weeks", null=False)
     year = models.IntegerField("Year")
     week = models.IntegerField("Week")
+    points = models.FloatField("Points", default=0.0)
 
+    # these fields not in use as of 9/1/2020, but won't be deleted in case i use them later
     passing_yds = models.IntegerField("Passing Yards", default=0)
     passing_tds = models.IntegerField("Passing Touchdowns", default=0)
     passing_ints = models.IntegerField("Passing Interceptions", default=0)

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect, withRouter } from "react-router-dom";
 import {
   Navbar,
   NavDropdown,
@@ -24,7 +24,25 @@ const Styles = styled.div`
 `;
 
 export class FootballNavbar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      player: ""
+    };
+  }
+
+  onSubmit = e => {
+    e.preventDefault();
+    const { player } = this.state;
+    this.props.history.push(`/search?player=${player}`);
+  };
+
+  onChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
   render() {
+    const { player } = this.state;
     return (
       <Styles>
         <Navbar bg="light" variant="light" expand="lg">
@@ -41,9 +59,18 @@ export class FootballNavbar extends Component {
                 </LinkContainer>
               </NavDropdown>
             </Nav>
-            <Form inline>
-              <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-              <Button variant="outline-success">Search</Button>
+            <Form inline onSubmit={this.onSubmit}>
+              <Form.Control
+                type="text"
+                placeholder="Search"
+                className="mr-sm-2"
+                onChange={this.onChange}
+                value={player}
+                name="player"
+              />
+              <Button variant="outline-success" type="submit">
+                Search
+              </Button>
             </Form>
           </Navbar.Collapse>
         </Navbar>
@@ -52,4 +79,4 @@ export class FootballNavbar extends Component {
   }
 }
 
-export default FootballNavbar;
+export default withRouter(FootballNavbar);

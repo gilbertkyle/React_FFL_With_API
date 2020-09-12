@@ -10,6 +10,6 @@ urlpatterns = [
     path('api/current_week', get_current_week),
     path('api/picks', ListPicks.as_view()),
     path('api/picks/<int:id>', UpdatePicks.as_view()),
-    path('api/players', ListPlayerAPI.as_view()),
-    path('api/players/<str:name>', RetrievePlayerAPI.as_view()),
+    path('api/players', PlayerViewSet.as_view({'get': 'list'})),
+    path('api/players/<int:pk>', PlayerViewSet.as_view({'get': 'retrieve'}))
 ]
