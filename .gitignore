@@ -48,4 +48,4 @@ spritesmith-generated/
 spritesmith.scss
 
 # templated email
-tmp_email/
+tmp_email/*.sqlite3
