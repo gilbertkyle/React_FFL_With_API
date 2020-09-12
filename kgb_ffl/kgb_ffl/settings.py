@@ -25,7 +25,7 @@ SECRET_KEY = 'l5b$90xf!t@ox7nebl=3w*5eo4wse2tf)%&(&b@f=ir64bjy$c'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -133,7 +133,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_URL = '/static/'
+
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
+#STATIC_ROOT = os.path.join(PROJECT_DIR, 'frontend/static')
+STATIC_ROOT = "/home/citizenpain/kgb_ffl/kgb_ffl/frontend/static"
+STATIC_URL = '/static/'
+
