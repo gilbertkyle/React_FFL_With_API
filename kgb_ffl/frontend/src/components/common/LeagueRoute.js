@@ -2,17 +2,26 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Route, Redirect } from "react-router-dom";
 
-const PrivateRoute = ({component: Component, auth, ...rest}) => {
-    <Route 
+const LeagueRoute = ({ component: Component, auth, leagues, ...rest }) => (
+  // this route component checks the users leagues, and if they aren't in the slected one,
+  // it sends them back to the home page
+  <Route
     {...rest}
     render={props => {
-        if () {
-            return <Redirect to="/" />
-        } else {
-            return <Component {...props} />
+      let leagueID = props.match.params.id;
+      for (var i = 0; i < leagues.length; i++) {
+        if (leagues[i].id == leagueID) {
+          return <Component {...props} />;
         }
+      }
+      return <Redirect to="/" />;
     }}
-    />
-}
+  />
+);
 
-export default LeagueRoute;
+const mapStateToProps = state => ({
+  leagues: state.leagues.leagues,
+  auth: state.auth
+});
+
+export default connect(mapStateToProps)(LeagueRoute);

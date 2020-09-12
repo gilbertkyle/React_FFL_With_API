@@ -14,6 +14,7 @@ import JoinLeague from "./leagues/JoinLeague";
 import Home from "./leagues/Home";
 import LeagueIndex from "./leagues/LeagueIndex";
 import PrivateRoute from "./common/PrivateRoute";
+import LeagueRoute from "./common/LeagueRoute";
 import PickDetail from "./leagues/PickDetail";
 import SearchPlayerContainer from "./leagues/SearchPlayerContainer";
 import { Jumbotron } from "./layout/Jumbotron";
@@ -56,7 +57,7 @@ class App extends React.Component {
                 <PrivateRoute path="/league/create" component={CreateLeague} exact />
                 <PrivateRoute path="/" exact component={() => <LeagueIndex />} />
                 <PrivateRoute path="/league/join" component={JoinLeague} />
-                <PrivateRoute exact path="/:id" component={Home} />
+                <LeagueRoute exact path="/:id" component={Home} />
                 <PrivateRoute exact path="/:id/picks" component={PickDetail} name="pick-detail" />
               </Switch>
             </Container>

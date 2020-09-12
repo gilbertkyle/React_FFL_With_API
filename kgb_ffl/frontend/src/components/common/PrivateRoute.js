@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { Route, Redirect } from "react-router-dom";
 
 const PrivateRoute = ({ component: Component, auth, ...rest }) => (
+  // checks whether the user is authenticated
+  // if not, it returns them to the home page
   <Route
     {...rest}
     render={props => {

@@ -6,9 +6,12 @@ import { updatePick } from "../../actions/league";
 import { Redirect, withRouter } from "react-router-dom";
 import { TextField, Button } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
+import { withAlert } from "react-alert";
 import axios from "axios";
 
 export class PickForm extends Component {
+  // singular parts of state are the chosen picks
+  // plural parts of state are used for autocomplete
   state = {
     qb: {},
     rb: {},
@@ -36,6 +39,34 @@ export class PickForm extends Component {
       te,
       defense
     };
+
+    // check for repeat picks in this league
+    const myPicks = this.props.picks;
+    for (var i = 0; i < myPicks.length; i++) {
+      if (myPicks[i].qb_id == qb.id) {
+        this.props.createMessage({ qbTaken: `You have already picked ${qb.name} this season` });
+        return;
+      }
+      if (myPicks[i].rb_id == rb.id) {
+        this.props.createMessage({ rbTaken: `You have already picked ${rb.name} this season` });
+        return;
+      }
+      if (myPicks[i].wr_id == wr.id) {
+        this.props.createMessage({ wrTaken: `You have already picked ${wr.name} this season` });
+        return;
+      }
+      if (myPicks[i].te_id == te.id) {
+        this.props.createMessage({ teTaken: `You have already picked ${te.name} this season` });
+        return;
+      }
+      if (myPicks[i].defense_id == defense.id) {
+        this.props.createMessage({
+          defenseTaken: `You have already picked ${defense.name} this season`
+        });
+        return;
+      }
+    }
+
     const pickId = this.props.picks.filter(pick => pick.week == this.props.week)[0].id;
     this.props.updatePick(pickId, picks);
   };
@@ -43,6 +74,7 @@ export class PickForm extends Component {
   onChange = e => this.setState({ [e.target.name]: value });
 
   componentDidMount() {
+    // seeding for the autocomplete
     axios
       .get("api/players")
       .then(res => {
@@ -77,70 +109,6 @@ export class PickForm extends Component {
     const { qb, rb, wr, te, defense } = this.state;
     return (
       <Fragment>
-        {/*
-        <form onSubmit={this.onSubmit}>
-          <fieldset>
-            <legend></legend>
-            <div className="form-group">
-              <label htmlFor="qbInput">Quarterback: </label>
-              <input
-                type="text"
-                value={qb}
-                onChange={this.onChange}
-                name="qb"
-                id="qbInput"
-                className="form-control"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="rbInput">Running Back: </label>
-              <input
-                type="text"
-                value={rb}
-                onChange={this.onChange}
-                name="rb"
-                id="rbInput"
-                className="form-control"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="wrInput">Wide Receiver: </label>
-              <input
-                type="text"
-                value={wr}
-                onChange={this.onChange}
-                name="wr"
-                id="wrInput"
-                className="form-control"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="teInput">Tight End: </label>
-              <input
-                type="text"
-                value={te}
-                onChange={this.onChange}
-                name="te"
-                id="teInput"
-                className="form-control"
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="defense">Defense: </label>
-              <input
-                type="text"
-                value={defense}
-                onChange={this.onChange}
-                name="defense"
-                id="defenseInput"
-                className="form-control"
-              />
-            </div>
-
-            <button type="submit">Submit</button>
-          </fieldset>
-        </form>
-        */}
         <form onSubmit={this.onSubmit}>
           <Autocomplete
             id="combo-box-qb"

@@ -20,6 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = "d+*+2do+q290mcfykqyh%s@2bg($q@u)7z9*e+x1_il8@#47pf"
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -139,6 +140,7 @@ PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 
 try:
-    from local_settings import *
+    from local_settings import SECRET_KEY
+
 except ImportError:
     pass
