@@ -136,6 +136,10 @@ USE_TZ = True
 
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+<<<<<<< HEAD
 #STATIC_ROOT = os.path.join(PROJECT_DIR, 'frontend/static')
+=======
+
+>>>>>>> de273e9021cdcec6c29594f4e26e262b86e30e82
 STATIC_ROOT = "/home/citizenpain/kgb_ffl/kgb_ffl/frontend/static"
 STATIC_URL = '/static/'
