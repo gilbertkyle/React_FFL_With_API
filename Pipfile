@@ -12,7 +12,7 @@ djangorestframework = "*"
 django-rest-knox = "*"
 nflgame-redux = "==2.0.1b1"
 requests = "*"
-nfldfs = "*"
+nfldfs = {git = "https://github.com/gilbertkyle/nfldfs.git"}
 pandas = "*"
 
 [requires]

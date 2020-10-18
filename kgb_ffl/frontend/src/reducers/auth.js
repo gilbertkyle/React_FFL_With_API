@@ -12,6 +12,7 @@ import {
 const initialState = {
   token: localStorage.getItem("token"),
   isAuthenticated: null,
+  isCommissioner: false,
   isLoading: false,
   user: null
 };
@@ -28,6 +29,7 @@ export default function(state = initialState, action) {
         ...state,
         isAuthenticated: true,
         isLoading: false,
+        isCommissioner: action.payload.is_commissioner,
         user: action.payload
       };
     case LOGIN_SUCCESS:

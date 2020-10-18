@@ -11,11 +11,13 @@ import {
   PICK_RETRIEVE_SUCCESS,
   PICK_UPDATE_SUCCESS,
   USER_PICK_RETRIEVE_SUCCESS,
-  PICK_RELOAD
+  PICK_RELOAD,
+  LOAD_YEAR
 } from "../actions/types";
 
 const initialState = {
   leagues: null,
+  commishLeagues: null,
   leagueLoading: false,
   leaguesUpdated: false,
   pickSubmitted: false
@@ -52,6 +54,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         week: action.payload.current_week
+      };
+    case LOAD_YEAR:
+      return {
+        ...state,
+        year: action.payload.current_year
       };
     case PICK_RETRIEVE_SUCCESS:
       return {

@@ -9,14 +9,46 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
 from rest_framework import status, viewsets
 from ffl import ffl_settings
+from django.conf import settings
 
 User = get_user_model()
 
 
+class AdminRetrievePicksAPI(generics.ListAPIView):
+    serializer_class = PickSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        league = self.request.query_params.get("league", 0)
+        return Pick.objects.filter(user=user, league=league)
+
+
 class PlayerViewSet(viewsets.ReadOnlyModelViewSet):
 
-    queryset = Player.objects.all()
     serializer_class = PlayerSerializer
+
+    def get_queryset(self):
+        player = self.request.query_params.get("player", "")
+        return Player.objects.filter(name__contains=player, weeks__year=settings.CURRENT_YEAR)
+
+
+class ListUsersAPI(generics.ListAPIView):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+
+    def get_queryset(self):
+        league = self.request.query_params.get("league", 0)
+        if not league:
+            return User.objects.none()
+        return User.objects.filter(leagues=league)
+
+
+class ListCommishLeaguesAPI(generics.ListAPIView):
+    serializer_class = LeagueSerializer
+
+    def get_queryset(self):
+        # returns all of the leagues that have the user as a commissioner
+        return League.objects.filter(admins=self.request.user)
 
 
 class ListPicks(generics.ListAPIView):
@@ -98,6 +130,10 @@ class CreateLeagueAPI(generics.CreateAPIView):
         # Now to create all of the pick objects for the creator of the league and attach them to the league year
         user_id = request.data['user_id']
         user = User.objects.get(id=user_id)
+
+        user.is_commissioner = True
+        user.save()
+
         league_year.create_picks(user)
         league.users.add(user)
         league.save()
@@ -147,11 +183,6 @@ class RetrieveLeagueAPI(generics.RetrieveAPIView):
         return League.objects.filter(id=id)
 
 
-class PlayerViewSet(viewsets.ModelViewSet):
-    queryset = Player.objects.all()
-    serializer_class = PlayerSerializer
-
-
 class RetrievePlayerAPI(generics.RetrieveAPIView):
     serializer_class = PlayerSerializer
 
@@ -195,6 +226,16 @@ def get_current_week(request):
     current_week = get_week()
     return Response({
         'current_week': current_week
+    })
+
+
+@api_view(['GET'])
+def get_current_year(request):
+
+    current_year = settings.CURRENT_YEAR
+    print(current_year)
+    return Response({
+        "current_year": current_year
     })
 
 

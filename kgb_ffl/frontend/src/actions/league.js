@@ -8,11 +8,29 @@ import {
   LEAGUE_RETRIEVE_SUCCESS,
   LEAGUE_LOADING,
   LOAD_WEEK,
+  LOAD_YEAR,
   PICK_RETRIEVE_SUCCESS,
   PICK_UPDATE_SUCCESS,
-  USER_PICK_RETRIEVE_SUCCESS
+  USER_PICK_RETRIEVE_SUCCESS,
+  LEAGUE_COMMISH_RETRIEVE_SUCCESS,
+  RETRIEVE_LEAGUE_USERS
 } from "./types";
 import { returnErrors } from "./messages";
+import { tokenConfig } from "./auth";
+
+export const retrieveCommishLeagues = () => (dispatch, getState) => {
+  axios
+    .get("/api/league/admin", tokenConfig(getState))
+    .then(response => {
+      dispatch({
+        type: LEAGUE_COMMISH_RETRIEVE_SUCCESS,
+        payload: response.data
+      });
+    })
+    .catch(error => {
+      dispatch(returnErrors(error.response.data, error.response.status));
+    });
+};
 
 export const updatePick = (pickId, picks) => dispatch => {
   const config = {
@@ -22,8 +40,6 @@ export const updatePick = (pickId, picks) => dispatch => {
   };
 
   const body = JSON.stringify(picks);
-
-  console.log(picks);
 
   axios
     .put(`/api/picks/${pickId}`, body, config)
@@ -169,5 +185,24 @@ export const getCurrentWeek = () => dispatch => {
     })
     .catch(err => {
       dispatch(returnErrors(err.response.data, err.response.status));
+    });
+};
+
+export const getCurrentYear = () => dispatch => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  };
+  axios
+    .get("/api/current_year")
+    .then(response => {
+      dispatch({
+        type: LOAD_YEAR,
+        payload: response.data
+      });
+    })
+    .catch(error => {
+      dispatch(returnErrors(error.response.data, error.response.status));
     });
 };

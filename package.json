@@ -37,7 +37,7 @@
     "bootstrap": "^4.4.1",
     "font-awesome": "^4.7.0",
     "qs": "^6.9.4",
-    "query-string": "^6.13.1",
+    "query-string": "^6.13.2",
     "react-alert": "^6.0.1",
     "react-alert-template-basic": "^1.0.0",
     "react-bootstrap": "^1.0.1",

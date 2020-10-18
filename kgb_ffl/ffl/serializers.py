@@ -125,7 +125,10 @@ class CreateLeagueSerializer(serializers.ModelSerializer):
             name=validated_data['name'],
             password=hashed_password
         )
-        league.admins.add(User.objects.get(pk=validated_data['user_id']))
+        user = User.objects.get(pk=validated_data['user_id'])
+        league.admins.add(user)
+        user.is_commissioner = True
+        user.save()
         league.save()
         return league
 

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { Link, Redirect, withRouter } from "react-router-dom";
 import {
   Navbar,
@@ -8,10 +8,12 @@ import {
   Button,
   Container,
   Row,
-  Nav
+  Nav,
+  NavItem
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import styled from "styled-components";
+import { connect } from "react-redux";
 
 const Styles = styled.div`
   * {
@@ -43,14 +45,22 @@ export class FootballNavbar extends Component {
 
   render() {
     const { player } = this.state;
+    const { isCommissioner } = this.props;
+
+    const commissionerLinks = (
+      <Nav.Link as={Link} to="/admin">
+        Admin
+      </Nav.Link>
+    );
+
     return (
       <Styles>
         <Navbar bg="light" variant="light" expand="lg">
-          <Navbar.Brand href="#"> Football</Navbar.Brand>
+          <Navbar.Brand href="#"> Home</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              <NavDropdown title="My League" id="basic-nav-dropdown">
+              <NavDropdown title="League" id="basic-nav-dropdown">
                 <LinkContainer to="/league/create">
                   <NavDropdown.Item>Create a league</NavDropdown.Item>
                 </LinkContainer>
@@ -58,6 +68,7 @@ export class FootballNavbar extends Component {
                   <NavDropdown.Item>Join a league</NavDropdown.Item>
                 </LinkContainer>
               </NavDropdown>
+              {isCommissioner ? commissionerLinks : <Fragment />}
             </Nav>
             <Form inline onSubmit={this.onSubmit}>
               <Form.Control
@@ -79,4 +90,8 @@ export class FootballNavbar extends Component {
   }
 }
 
-export default withRouter(FootballNavbar);
+const mapStateToProps = state => ({
+  isCommissioner: state.auth.isCommissioner
+});
+
+export default connect(mapStateToProps)(withRouter(FootballNavbar));

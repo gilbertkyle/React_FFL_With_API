@@ -4,12 +4,16 @@ from django.contrib.auth import authenticate
 User = get_user_model()
 
 # User serializer
+
+
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email']
+        fields = ['id', 'username', 'email', 'is_commissioner']
 
 # Register serializer
+
+
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -21,10 +25,12 @@ class RegisterSerializer(serializers.ModelSerializer):
             validated_data['username'],
             validated_data['email'],
             validated_data['password']
-            )
+        )
         return user
 
 # Login Serializer
+
+
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()

@@ -105,7 +105,7 @@ class PlayerWeek(models.Model):
     week = models.IntegerField("Week")
     points = models.FloatField("Points", default=0.0)
 
-    # these fields not in use as of 9/1/2020, but won't be deleted in case i use them later
+    # these fields not in use as of 9/1/2020, but won't be deleted in case I use them later
     passing_yds = models.IntegerField("Passing Yards", default=0)
     passing_tds = models.IntegerField("Passing Touchdowns", default=0)
     passing_ints = models.IntegerField("Passing Interceptions", default=0)
@@ -124,6 +124,7 @@ class PlayerWeek(models.Model):
         return f"{self.player.name}, week {self.week}, {self.year}"
 
 
+# Not in use anymore, since nfldfs gives points to defenses without me having to calculate it
 class Defense(models.Model):
     team = models.CharField("Team Name", max_length=5)
     verbose_name = models.CharField("Verbose Name", max_length=50, default="")

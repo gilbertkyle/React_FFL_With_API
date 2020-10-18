@@ -139,3 +139,7 @@ PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 #STATIC_ROOT = os.path.join(PROJECT_DIR, 'frontend/static')
 STATIC_ROOT = "/home/citizenpain/kgb_ffl/kgb_ffl/frontend/static"
 STATIC_URL = '/static/'
+
+# My Variables
+
+CURRENT_YEAR = 2020

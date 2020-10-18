@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import { createMessage } from "../../actions/messages";
 import { Home } from "./Home";
 import FootballNavbar from "../layout/FootballNavbar";
+import { Col, Row, Card } from "react-bootstrap";
 
 export class LeagueIndex extends Component {
   static proptypes = {
@@ -48,11 +49,30 @@ export class LeagueIndex extends Component {
         </ul>
       </Fragment>
     );
+
+    const cardLinks = (
+      <Fragment>
+        <Row>
+          {myLeagues.map((league, index) => (
+            <Col xs={12} md={6} key={index}>
+              <Card>
+                <Link to={`/${league.id}`}>
+                  <Card.Body>
+                    <Card.Title>{league.name}</Card.Title>
+                  </Card.Body>
+                </Link>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Fragment>
+    );
+
     const guestLinks = <h1>Log in!</h1>;
     return (
       <Fragment>
         {myLeagues.length > 0 ? <h3>Choose a league</h3> : <h3>Join a league</h3>}
-        {isAuthenticated ? authLinks : guestLinks}
+        {isAuthenticated ? cardLinks : guestLinks}
       </Fragment>
     );
   }
