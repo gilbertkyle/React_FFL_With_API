@@ -4,6 +4,6 @@
 """
 import datetime
 
-BASE_DATE = datetime.datetime(2020, 9, 3, 10, 0, 0)
+BASE_DATE = datetime.datetime(2020, 8, 30, 10, 0, 0)
 
 NUMBER_OF_WEEKS = 17
