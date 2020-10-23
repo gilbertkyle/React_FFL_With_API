@@ -22,7 +22,7 @@ export class AdminProfile extends Component {
   };
 
   componentDidMount() {
-    this.props.getPicksAdmin(1);
+    this.props.getPicksAdmin(this.props.match.params.id);
   }
 
   handleClick(e) {

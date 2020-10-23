@@ -67,6 +67,8 @@ class Pick(models.Model):
     te_points = models.FloatField(default=0.0)
 
     defense = models.CharField("Defense", max_length=25)
+    defense_id = models.CharField(
+        default="", max_length=20, blank=True, null=True)
     def_points = models.FloatField(default=0.0)
 
     total_points = models.FloatField(default=0.0)
@@ -85,6 +87,15 @@ class Pick(models.Model):
             self.def_points
         )
         super(Pick, self).save(*args, **kwargs)
+
+    def iter_positions(self):
+        return [
+            (self.qb_id, self.qb, self.qb_points),
+            (self.rb_id, self.rb, self.rb_points),
+            (self.wr_id, self.wr, self.wr_points),
+            (self.te_id, self.te, self.te_points),
+            (self.defense_id, self.defense, self.def_points)
+        ]
 
 
 class Player(models.Model):

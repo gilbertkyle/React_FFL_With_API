@@ -10,6 +10,8 @@ node_modules
 __pycache__/
 /.vscode/
 local_settings.py
+kgb_ffl/kgb_ffl/settings.py
+kgb_ffl/db.sqlite3
 
 # coverage result
 .coverage

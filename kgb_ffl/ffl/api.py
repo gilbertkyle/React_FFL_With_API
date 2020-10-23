@@ -1,15 +1,16 @@
-from rest_framework import generics, permissions
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from .serializers import CreateLeagueSerializer, LeagueSerializer, LeagueAdminSerializer, PickSerializer, PlayerSerializer, PlayerWeekSerializer, UserSerializer, JoinLeagueSerializer, UpdatePickSerializer
-from .models import League, LeagueYear, Pick, Player, PlayerWeek
-from rest_framework.decorators import api_view
-import datetime
-from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import check_password
-from rest_framework import status, viewsets
-from ffl import ffl_settings
 from django.conf import settings
+from rest_framework import status, viewsets
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth import get_user_model
+import datetime
+from rest_framework.decorators import api_view
+from .models import League, LeagueYear, Pick, Player, PlayerWeek
+from .serializers import CreateLeagueSerializer, LeagueSerializer, LeagueAdminSerializer, PickSerializer, PlayerSerializer, PlayerWeekSerializer, UserSerializer, JoinLeagueSerializer, UpdatePickSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import generics, permissions
+from .ffl_settings import *
+
 
 User = get_user_model()
 
@@ -232,8 +233,7 @@ def get_current_week(request):
 @api_view(['GET'])
 def get_current_year(request):
 
-    current_year = settings.CURRENT_YEAR
-    print(current_year)
+    current_year = CURRENT_YEAR
     return Response({
         "current_year": current_year
     })
@@ -244,12 +244,12 @@ def get_week():
     Returns the current week of the NFL
     Set the base week to 7 days before Week 1 Sunday
     """
-    base_week = ffl_settings.BASE_DATE
+    base_week = BASE_DATE
     today = datetime.datetime.now()
     diff = today - base_week
     current_week = int(diff.days/7) if diff.days >= 0 else 1
-    if current_week > ffl_settings.NUMBER_OF_WEEKS:
-        return ffl_settings.NUMBER_OF_WEEKS
+    if current_week > NUMBER_OF_WEEKS:
+        return NUMBER_OF_WEEKS
     elif current_week < 1:
         return 1
     return current_week

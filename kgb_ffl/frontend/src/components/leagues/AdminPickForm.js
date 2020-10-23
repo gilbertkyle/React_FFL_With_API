@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import { Autocomplete } from "@material-ui/lab";
 import { TextField, Button, Select, InputLabel, MenuItem } from "@material-ui/core";
 import { connect } from "react-redux";
+import { updatePick } from "../../actions/league";
 import axios from "axios";
 
 export class AdminPickForm extends Component {
@@ -30,8 +31,7 @@ export class AdminPickForm extends Component {
     };
 
     const pickId = this.props.picks.filter(pick => pick.week == this.props.week)[0].id;
-    console.log(pickId);
-    //this.props.updatePick(pickId, picks);
+    this.props.updatePick(pickId, picks);
   };
 
   componentDidMount() {
@@ -65,7 +65,6 @@ export class AdminPickForm extends Component {
   };
 
   render() {
-    const { weeks } = this.state;
     return (
       <Fragment>
         <form onSubmit={this.onSubmit}>
@@ -128,4 +127,7 @@ const mapStateToProps = state => ({
   picks: state.admin.picks
 });
 
-export default connect(mapStateToProps)(AdminPickForm);
+export default connect(
+  mapStateToProps,
+  { updatePick }
+)(AdminPickForm);

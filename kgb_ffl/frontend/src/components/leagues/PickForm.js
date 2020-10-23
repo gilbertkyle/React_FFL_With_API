@@ -116,7 +116,6 @@ export class PickForm extends Component {
             options={this.state.qbs}
             getOptionLabel={this.optionLabel}
             style={{ width: 300, margin: 30 }}
-            maxSearchResults={5}
             renderInput={params => (
               <TextField {...params} label="Quarterback" variant="outlined" name="qb" />
             )}
