@@ -55,6 +55,7 @@ export class AdminPickForm extends Component {
           tes,
           defenses
         });
+        console.log(this.state);
       });
   }
 
