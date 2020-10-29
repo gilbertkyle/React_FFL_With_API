@@ -22,11 +22,12 @@ export const getUsersInLeague = league => dispatch => {
     });
 };
 
-export const getPicksAdmin = league => (dispatch, getState) => {
+export const getPicksAdmin = (league, username) => (dispatch, getState) => {
   const config = tokenConfig(getState);
 
   config["params"] = {};
   config.params["league"] = league;
+  config.params["username"] = username;
 
   axios
     .get("api/admin/picks", config)

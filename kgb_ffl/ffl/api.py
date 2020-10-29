@@ -19,7 +19,8 @@ class AdminRetrievePicksAPI(generics.ListAPIView):
     serializer_class = PickSerializer
 
     def get_queryset(self):
-        user = self.request.user
+        user = User.objects.filter(
+            username=self.request.query_params.get("username", "")).first()
         league = self.request.query_params.get("league", 0)
         return Pick.objects.filter(user=user, league=league)
 

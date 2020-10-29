@@ -6,6 +6,7 @@ import { Link } from "react-router";
 import { ButtonGroup } from "react-bootstrap";
 import { getPicksAdmin } from "../../actions/admin";
 import AdminPickForm from "./AdminPickForm";
+import { withRouter } from "react-router-dom";
 
 export class AdminProfile extends Component {
   constructor(props) {
@@ -22,7 +23,7 @@ export class AdminProfile extends Component {
   };
 
   componentDidMount() {
-    this.props.getPicksAdmin(this.props.match.params.id);
+    this.props.getPicksAdmin(this.props.match.params.id, this.props.match.params.username);
   }
 
   handleClick(e) {
@@ -35,7 +36,7 @@ export class AdminProfile extends Component {
   render() {
     return (
       <Fragment>
-        <h5>User: {this.props.user.username}</h5>
+        <h5>User: {this.props.match.params.username}</h5>
         <ButtonGroup size="sm" className="flex-wrap">
           {this.props.picks.map((pick, index) => (
             <button
@@ -62,4 +63,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { getPicksAdmin }
-)(AdminProfile);
+)(withRouter(AdminProfile));
