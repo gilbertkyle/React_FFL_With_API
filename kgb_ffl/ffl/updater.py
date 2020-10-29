@@ -41,31 +41,41 @@ class Updater():
                 pick.qb_points = qb.points
             except PlayerWeek.DoesNotExist:
                 pick.qb_points = 0
+            except Player.DoesNotExist:
+                print(pick)
             try:
                 rb = Player.objects.get(id=pick.rb_id).weeks.get(
                     week=self.week, year=self.year)
                 pick.rb_points = rb.points
             except PlayerWeek.DoesNotExist:
                 pick.rb_points = 0
+            except Player.DoesNotExist:
+                print(pick)
             try:
                 wr = Player.objects.get(id=pick.wr_id).weeks.get(
                     week=self.week, year=self.year)
                 pick.wr_points = wr.points
             except PlayerWeek.DoesNotExist:
                 pick.wr_points = 0
+            except Player.DoesNotExist:
+                print(pick)
             try:
                 te = Player.objects.get(id=pick.te_id).weeks.get(
                     week=self.week, year=self.year)
                 pick.te_points = te.points
             except PlayerWeek.DoesNotExist:
                 pick.te_points = 0
+            except Player.DoesNotExist:
+                print(pick)
             try:
                 defense = Player.objects.get(id=pick.defense_id).weeks.get(
                     week=self.week, year=self.year)
                 pick.def_points = defense.points
             except PlayerWeek.DoesNotExist:
                 pick.def_points = 0
-        pick.save()
+            except Player.DoesNotExist:
+                print(pick)
+            pick.save()
 
 
 if __name__ == "__main__":

@@ -51,19 +51,23 @@ class Pick(models.Model):
     year = models.IntegerField(default=datetime.date.today().year)
 
     qb = models.CharField("Quarterback", max_length=25)
-    qb_id = models.CharField(default="", max_length=20, blank=True, null=True)
+    qb_id = models.CharField(
+        default="", max_length=20, blank=True, null=True)
     qb_points = models.FloatField(default=0.0)
 
     rb = models.CharField("Running back", max_length=25)
-    rb_id = models.CharField(default="", max_length=20, blank=True, null=True)
+    rb_id = models.CharField(
+        default="", max_length=20, blank=True, null=True)
     rb_points = models.FloatField(default=0.0)
 
     wr = models.CharField("Wide receiver", max_length=25)
-    wr_id = models.CharField(default="", max_length=20, blank=True, null=True)
+    wr_id = models.CharField(
+        default="", max_length=20, blank=True, null=True)
     wr_points = models.FloatField(default=0.0)
 
     te = models.CharField("Tight end", max_length=25)
-    te_id = models.CharField(default="", max_length=20, blank=True, null=True)
+    te_id = models.CharField(
+        default="", max_length=20, blank=True, null=True)
     te_points = models.FloatField(default=0.0)
 
     defense = models.CharField("Defense", max_length=25)
