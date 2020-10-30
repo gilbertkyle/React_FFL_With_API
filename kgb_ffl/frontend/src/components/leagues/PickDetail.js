@@ -68,7 +68,7 @@ export class PickDetail extends Component {
                 <td>{pick.te}</td>
                 <td>{pick.te_points}</td>
                 <td>{pick.defense}</td>
-                <td>{pick.defense_points}</td>
+                <td>{pick.def_points}</td>
                 <td>{pick.total_points}</td>
               </tr>
             ))}
