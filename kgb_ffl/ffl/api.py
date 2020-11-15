@@ -31,7 +31,7 @@ class PlayerViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         player = self.request.query_params.get("player", "")
-        return Player.objects.filter(name__contains=player, weeks__year=settings.CURRENT_YEAR)
+        return Player.objects.filter(name__contains=player)
 
 
 class ListUsersAPI(generics.ListAPIView):
