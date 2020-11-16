@@ -20,8 +20,8 @@ def get_week():
     today = datetime.datetime.now()
     diff = today - base_week
     current_week = int(diff.days/7) if diff.days >= 0 else 1
-    if current_week > ffl_settings.NUMBER_OF_WEEKS:
-        return ffl_settings.NUMBER_OF_WEEKS
+    if current_week > NUMBER_OF_WEEKS:
+        return NUMBER_OF_WEEKS
     elif current_week < 1:
         return 1
     return current_week

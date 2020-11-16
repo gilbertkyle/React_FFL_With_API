@@ -7,9 +7,10 @@ from ffl.models import Player, Pick, PlayerWeek
 class Command(BaseCommand):
 
     def add_arguments(self, parser):
-        parser.add_argument('year', type=int, help="Current season of NFL")
+        parser.add_argument('year', type=int, nargs="?",
+                            default=CURRENT_YEAR, help="Current season of NFL")
         parser.add_argument(
-            'week', type=int, help="Current week of NFL season")
+            'week', type=int, nargs="?", default=get_week()-1, help="Current week of NFL season")
 
     def handle(self, *args, **kwargs):
         year = kwargs['year']
