@@ -12,8 +12,9 @@ djangorestframework = "*"
 django-rest-knox = "*"
 nflgame-redux = "==2.0.1b1"
 requests = "*"
-nfldfs = {git = "https://github.com/gilbertkyle/nfldfs.git"}
 pandas = "*"
+nfldfs = "*"
+django-dotenv = "*"
 
 [requires]
 python_version = "3.7"
