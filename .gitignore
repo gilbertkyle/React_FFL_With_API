@@ -11,8 +11,10 @@ __pycache__/
 /.vscode/
 local_settings.py
 kgb_ffl/kgb_ffl/settings.py
+kgb_ffl/kgb_ffl/.env
 kgb_ffl/db.sqlite3
 kgb_ffl/frontend/static/frontend/main.js
+
 
 # coverage result
 .coverage
