@@ -246,7 +246,8 @@ def get_week():
     Set the base week to 7 days before Week 1 Sunday
     """
     base_week = BASE_DATE
-    today = datetime.datetime.now()
+    today = datetime.datetime.now(TIME_ZONE)
+    print(TIME_ZONE)
     diff = today - base_week
     current_week = int(diff.days/7) if diff.days >= 0 else 1
     if current_week > NUMBER_OF_WEEKS:
