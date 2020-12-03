@@ -3,8 +3,9 @@ import { connect } from "react-redux";
 import { Route, Redirect } from "react-router-dom";
 
 const LeagueRoute = ({ component: Component, auth, leagues, ...rest }) => (
-  // this route component checks the users leagues, and if they aren't in the slected one,
+  // this route component checks the users leagues, and if they aren't in the selected one,
   // it sends them back to the home page
+
   <Route
     {...rest}
     render={props => {
@@ -20,7 +21,7 @@ const LeagueRoute = ({ component: Component, auth, leagues, ...rest }) => (
 );
 
 const mapStateToProps = state => ({
-  leagues: state.leagues.leagues,
+  leagues: state.ffl.leagues,
   auth: state.auth
 });
 

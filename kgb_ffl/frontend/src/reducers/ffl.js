@@ -16,7 +16,7 @@ import {
 } from "../actions/types";
 
 const initialState = {
-  leagues: null,
+  leagues: [],
   commishLeagues: null,
   leagueLoading: false,
   leaguesUpdated: false,

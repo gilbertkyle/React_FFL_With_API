@@ -9,16 +9,16 @@ import Alerts from "./layout/Alerts";
 import FootballNavbar from "./layout/FootballNavbar";
 import Login from "./accounts/Login";
 import Register from "./accounts/Register";
-import CreateLeague from "./leagues/CreateLeague";
-import JoinLeague from "./leagues/JoinLeague";
-import Home from "./leagues/Home";
-import LeagueIndex from "./leagues/LeagueIndex";
+import CreateLeague from "./ffl/CreateLeague";
+import JoinLeague from "./ffl/JoinLeague";
+import Home from "./ffl/Home";
+import LeagueIndex from "./ffl/LeagueIndex";
 import PrivateRoute from "./common/PrivateRoute";
 import LeagueRoute from "./common/LeagueRoute";
 import AdminRoute from "./common/AdminRoute";
-import PickDetail from "./leagues/PickDetail";
-import PlayerSearch from "./leagues/PlayerSearch";
-import PlayerDetail from "./leagues/PlayerDetail";
+import PickDetail from "./ffl/PickDetail";
+import PlayerSearch from "./ffl/PlayerSearch";
+import PlayerDetail from "./ffl/PlayerDetail";
 import { Jumbotron } from "./layout/Jumbotron";
 
 import { Container } from "react-bootstrap";
@@ -30,9 +30,9 @@ import store from "../store";
 
 import { loadUser } from "../actions/auth";
 import { retrieveLeagues, getCurrentWeek, getCurrentYear } from "../actions/league";
-import AdminIndex from "./leagues/AdminIndex";
-import AdminHome from "./leagues/AdminHome";
-import AdminProfile from "./leagues/AdminProfile";
+import AdminIndex from "./ffl/AdminIndex";
+import AdminHome from "./ffl/AdminHome";
+import AdminProfile from "./ffl/AdminProfile";
 
 // alert options
 const alertOptions = {

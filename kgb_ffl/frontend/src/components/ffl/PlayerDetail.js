@@ -63,7 +63,7 @@ export class PlayerDetail extends Component {
 }
 
 const mapStateToProps = state => ({
-  current_year: state.leagues.year
+  current_year: state.ffl.year
 });
 
 export default connect(mapStateToProps)(PlayerDetail);

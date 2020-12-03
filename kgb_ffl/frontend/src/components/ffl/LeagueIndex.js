@@ -26,14 +26,11 @@ export class LeagueIndex extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {}
-
   render() {
     const { isAuthenticated } = this.props.auth;
-    const { leagues } = this.props.leagues;
     let myLeagues = [];
-    if (this.props.leagues.leagues !== null) {
-      myLeagues = this.props.leagues.leagues;
+    if (this.props.leagues !== null) {
+      myLeagues = this.props.leagues;
     }
 
     const authLinks = (
@@ -80,7 +77,7 @@ export class LeagueIndex extends Component {
 
 const mapStateToProps = state => ({
   user: state.auth.user,
-  leagues: state.leagues,
+  leagues: state.ffl.leagues,
   auth: state.auth
 });
 

@@ -1,25 +1,39 @@
 import React, { Component, Fragment } from "react";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { Table } from "react-bootstrap";
+import PickForm from "./PickForm";
+import { Table, ButtonGroup } from "react-bootstrap";
 
-export class WeekDetail extends Component {
-  state = {
-    week: this.props.week
-  };
-  static getDerivedStateFromProps(props, state) {
-    if (props.week !== state.week) {
-      return { week: props.week };
-    }
-    return null;
+export class PickDetail extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      week: props.week
+    };
+    this.handleClick = this.handleClick.bind(this);
   }
+  handleClick(e) {
+    let week = e.target.innerText;
+    this.setState({
+      week: week
+    });
+  }
+
+  componentDidUpdate(prevProps) {}
+
   render() {
+    let weeks = [];
+    for (let i = 1; i <= this.props.week; i++) {
+      weeks.push(i);
+    }
     let leaguePicks = [];
     if (this.props.picks) {
-      leaguePicks = this.props.picks.filter(pick => pick.week === this.props.week);
+      leaguePicks = this.props.picks.filter(pick => pick.week == this.state.week);
     }
-    return (
-      <Fragment key={this.props.week}>
-        <p key={this.props.week}>{this.props.week}</p>
+
+    const pickForm = <PickForm key={this.state.week} week={this.state.week} />;
+    const otherStuff = (
+      <Fragment>
         <Table responsive striped bordered hover size="sm">
           <thead>
             <tr>
@@ -52,7 +66,7 @@ export class WeekDetail extends Component {
                 <td>{pick.te}</td>
                 <td>{pick.te_points}</td>
                 <td>{pick.defense}</td>
-                <td>{pick.defense_points}</td>
+                <td>{pick.def_points}</td>
                 <td>{pick.total_points}</td>
               </tr>
             ))}
@@ -60,13 +74,30 @@ export class WeekDetail extends Component {
         </Table>
       </Fragment>
     );
+
+    return (
+      <div className="container-fluid">
+        <ButtonGroup size="sm" className="flex-wrap">
+          {weeks.map((week, index) => (
+            <button
+              key={index}
+              className="btn btn-outline-secondary"
+              onClick={this.handleClick.bind(this)}
+            >
+              {week}
+            </button>
+          ))}
+        </ButtonGroup>
+        <h3>Week: {this.state.week}</h3>
+        {this.state.week == this.props.week ? pickForm : otherStuff}
+      </div>
+    );
   }
 }
 
 const mapStateToProps = state => ({
-  // week: state.leagues.week,
-  user: state.auth.user,
-  picks: state.leagues.picks
+  week: state.ffl.week,
+  picks: state.ffl.picks
 });
 
-export default connect(mapStateToProps)(WeekDetail);
+export default connect(mapStateToProps)(PickDetail);

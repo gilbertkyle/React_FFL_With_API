@@ -72,7 +72,7 @@ export class JoinLeague extends Component {
 const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated,
   user: state.auth.user,
-  leaguesUpdated: state.leagues.leaguesUpdated
+  leaguesUpdated: state.ffl.leaguesUpdated
 });
 
 export default connect(

@@ -50,10 +50,10 @@ export class Home extends Component {
 
 const mapStateToProps = state => ({
   user: state.auth.user,
-  week: state.leagues.week,
-  picks: state.leagues.picks,
-  myPicks: state.leagues.myPicks,
-  pickSubmitted: state.leagues.pickSubmitted
+  week: state.ffl.week,
+  picks: state.ffl.picks,
+  myPicks: state.ffl.myPicks,
+  pickSubmitted: state.ffl.pickSubmitted
 });
 
 const mapDispatchToProps = dispatch => ({

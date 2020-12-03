@@ -167,8 +167,8 @@ export class PickForm extends Component {
 
 const mapStateToProps = state => ({
   user: state.auth.user,
-  picks: state.leagues.myPicks,
-  pickSubmitted: state.leagues.pickSubmitted
+  picks: state.ffl.myPicks,
+  pickSubmitted: state.ffl.pickSubmitted
 });
 
 const mapDispatchToProps = dispatch => ({
