@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { retrieveCommishLeagues } from "../../actions/league";
+import { retrieveCommishLeagues } from "../../actions/ffl";
 import { Link } from "react-router-dom";
 
 export class AdminIndex extends Component {

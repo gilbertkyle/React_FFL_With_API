@@ -1,10 +1,18 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 import datetime
-#from accounts.models import User
 User = get_user_model()
 
 # Create your models here.
+
+
+class LeagueProfile(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    league = models.OneToOneField("League", on_delete=models.CASCADE)
+    team_name = models.CharField(max_length=40, null=True, default="")
+
+    def __str__(self):
+        return self.team_name
 
 
 class League(models.Model):

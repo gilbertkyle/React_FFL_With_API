@@ -69,11 +69,11 @@ class ListPicks(generics.ListAPIView):
         week = self.request.query_params.get('current_week', 0)
         username = self.request.query_params.get('username', '')
         league_id = self.request.query_params.get('leagueId', 0)
-        year = datetime.datetime.now().year
+        year = CURRENT_YEAR
         if username:
             filters['user__username'] = username
-        else:
-            filters['week__lt'] = week
+        # else:
+            #filters['week__lt'] = week
         filters['league__league__id'] = league_id
         filters['year'] = year
         return Pick.objects.filter(**filters)

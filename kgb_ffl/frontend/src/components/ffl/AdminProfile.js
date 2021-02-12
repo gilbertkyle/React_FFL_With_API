@@ -1,8 +1,6 @@
 import React, { Component, Fragment } from "react";
-import { Table } from "react-bootstrap";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { Link } from "react-router";
 import { ButtonGroup } from "react-bootstrap";
 import { getPicksAdmin } from "../../actions/admin";
 import AdminPickForm from "./AdminPickForm";

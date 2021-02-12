@@ -1,87 +1,63 @@
-import React, { Component, Fragment } from "react";
-import { Link, Switch, Route } from "react-router-dom";
-import axios from "axios";
+import React, { Fragment, useEffect } from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { retrieveLeagues } from "../../actions/league";
-import { connect } from "react-redux";
-import { createMessage } from "../../actions/messages";
-import { Home } from "./Home";
-import FootballNavbar from "../layout/FootballNavbar";
-import { Col, Row, Card } from "react-bootstrap";
+import { retrieveLeagues } from "../../actions/ffl";
+import { useSelector, useDispatch } from "react-redux";
+import { Card, CardContent, Grid, Typography } from "@material-ui/core";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 
-export class LeagueIndex extends Component {
-  static proptypes = {
-    retrieveLeagues: PropTypes.func.isRequired,
-    leagues: PropTypes.array,
-    leagueLoaded: PropTypes.bool
-  };
-
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() {
-    if (!this.props.leagueLoaded) {
-      this.props.retrieveLeagues(this.props.user.username);
+const useStyles = makeStyles(theme => ({
+  card: {
+    "&:hover": {
+      backgroundColor: "rgba(10,10,10,.15)"
     }
   }
+}));
 
-  render() {
-    const { isAuthenticated } = this.props.auth;
-    let myLeagues = [];
-    if (this.props.leagues !== null) {
-      myLeagues = this.props.leagues;
-    }
+const LeagueIndex = props => {
+  const { isAuthenticated, user } = useSelector(state => state.auth);
+  const { leagues, leagueLoaded } = useSelector(state => state.ffl);
+  const dispatch = useDispatch();
 
-    const authLinks = (
-      <Fragment>
-        <ul>
-          {myLeagues.map((league, index) => (
-            <h3 key={index}>
-              <Link key={league.id} to={`/${league.id}`}>
-                {league.name}
-              </Link>
-            </h3>
-          ))}
-        </ul>
-      </Fragment>
-    );
+  const classes = useStyles();
 
-    const cardLinks = (
-      <Fragment>
-        <Row>
-          {myLeagues.map((league, index) => (
-            <Col xs={12} md={6} key={index}>
-              <Card>
-                <Link to={`/${league.id}`}>
-                  <Card.Body>
-                    <Card.Title>{league.name}</Card.Title>
-                  </Card.Body>
-                </Link>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      </Fragment>
-    );
+  useEffect(() => {
+    dispatch(retrieveLeagues(user.username));
+  }, []);
 
-    const guestLinks = <h1>Log in!</h1>;
-    return (
-      <Fragment>
-        {myLeagues.length > 0 ? <h3>Choose a league</h3> : <h3>Join a league</h3>}
-        {isAuthenticated ? cardLinks : guestLinks}
-      </Fragment>
-    );
-  }
-}
+  const cardLinks = (
+    <Grid container>
+      {leagues.map((league, index) => (
+        <Grid item xs={12} md={6} key={index}>
+          <Card className={classes.card}>
+            <Typography
+              variant="h3"
+              component={Link}
+              className={classes.link}
+              to={{ pathname: `/${league.id}`, state: { name: league.name } }}
+              style={{ textDecoration: "none" }}
+            >
+              {league.name}
+            </Typography>
+          </Card>
+        </Grid>
+      ))}
+    </Grid>
+  );
 
-const mapStateToProps = state => ({
-  user: state.auth.user,
-  leagues: state.ffl.leagues,
-  auth: state.auth
-});
+  const guestLinks = <h1>Log in!</h1>;
 
-export default connect(
-  mapStateToProps,
-  { createMessage, retrieveLeagues }
-)(LeagueIndex);
+  return (
+    <Fragment>
+      {leagues.length > 0 ? <h3>Choose a league</h3> : <h3>Join a league</h3>}
+      {isAuthenticated ? cardLinks : guestLinks}
+    </Fragment>
+  );
+};
+
+LeagueIndex.propTypes = {
+  leagues: PropTypes.array,
+  leagueLoaded: PropTypes.bool
+};
+
+export default LeagueIndex;

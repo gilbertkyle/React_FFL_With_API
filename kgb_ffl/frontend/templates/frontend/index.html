@@ -4,36 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <base href="/">
     <link rel="stylesheet" href="https://bootswatch.com/4/cosmo/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
     {% load static %}
         <link rel="shortcut icon" href="{%  static 'frontend/favicon.ico' %}">
+        <link rel="stylesheet" href="{% static 'frontend/styles.css' %}">
     <title>KGB FFL</title>
-    <style>
-        @media only screen and (min-width: 600px) {
-            body {
-            background: url("../../../static/frontend/pats_cowboys.jpg") no-repeat fixed bottom;
-            z-index: -10;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-size: cover;
-            }
-        }
-
-        .main-container {
-            background-color: #fff;
-            min-height: 800px;
-            border-radius: 0px 0px 10px 10px;
-            border-style: solid;
-            border-width: 0px 1px 1px 1px;
-            margin: 0 auto;
-        }
-        /* maybe remove below, not sure if it works*/
-        .jumbo {
-            margin: 0;
-        }
-    </style>
+    
 </head>
     <body>
         <div id="app"></div>

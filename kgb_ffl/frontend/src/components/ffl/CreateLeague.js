@@ -1,11 +1,74 @@
-import React, { Component, Fragment } from "react";
-import { Dropdown, DropdownButton } from "react-bootstrap";
+import React, { Component, Fragment, useState } from "react";
 import { createMessage } from "../../actions/messages";
-import { connect } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
-import { registerLeague } from "../../actions/league";
-import { Redirect } from "react-router-dom";
+import { registerLeague } from "../../actions/ffl";
+import { TextField, Button } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 
+const useStyles = makeStyles(theme => ({
+  inputGroup: {
+    display: "flex",
+    flexDirection: "column"
+  },
+  input: {
+    maxWidth: "30%",
+    margin: "1rem"
+  },
+  button: {
+    color: theme.palette.common.black
+  }
+}));
+
+const CreateLeague = props => {
+  // set local state variables
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
+
+  // get state variables
+  const { user, isAuthenticated } = useSelector(state => state.auth);
+  const { leaguesUpdated } = useSelector(state => state.ffl);
+
+  // get dispatch
+  const dispatch = useDispatch();
+
+  // get styles
+  const classes = useStyles();
+
+  // handleSubmit
+  const handleSubmit = e => {
+    if (!name || !password) return;
+    if (password !== password2) {
+      dispatch(createMessage({ passwordNotMatch: "Passwords do not match" }));
+    } else {
+      const newLeague = {
+        name: name,
+        password: password,
+        user_id: user.id
+      };
+      dispatch(registerLeague(newLeague));
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <h2>Create a New League</h2>
+      <div className={classes.inputGroup}>
+        <TextField className={classes.input} label="League Name" variant="outlined" />
+        <TextField className={classes.input} label="Password" variant="outlined" />
+        <TextField className={classes.input} label="Confirm Password" variant="outlined" />
+      </div>
+      <Button className={classes.button} type="submit">
+        Create League
+      </Button>
+    </form>
+  );
+};
+
+export default CreateLeague;
+
+/*
 export class CreateLeague extends Component {
   constructor(props) {
     super(props);
@@ -108,3 +171,4 @@ export default connect(
   mapStateToProps,
   { createMessage, registerLeague }
 )(CreateLeague);
+*/

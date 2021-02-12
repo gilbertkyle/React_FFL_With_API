@@ -26,6 +26,12 @@ const useStyles = makeStyles(theme => ({
     "&:nth-child(odd)": {
       backgroundColor: "rgb(235, 235, 235)"
     }
+  },
+  importantCell: {
+    fontWeight: "bold"
+  },
+  cell: {
+    padding: ".5rem"
   }
 }));
 
@@ -33,10 +39,10 @@ export const PickTable = ({ picks = [] }) => {
   const classes = useStyles();
   return (
     <TableContainer component={Paper} className={classes.paper}>
-      <Table size="small">
+      <Table padding="none" size="small">
         <TableHead>
           <TableRow className={classes.head}>
-            <TableCell>Week</TableCell>
+            <TableCell className={classes.cell}>Week</TableCell>
             <TableCell>Quarterback</TableCell>
             <TableCell>QB Points</TableCell>
             <TableCell>Running Back</TableCell>
@@ -47,14 +53,14 @@ export const PickTable = ({ picks = [] }) => {
             <TableCell>TE Points</TableCell>
             <TableCell>Defense</TableCell>
             <TableCell>Defense Points</TableCell>
-            <TableCell>Total Points </TableCell>
+            <TableCell align="right">Total Points </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {picks.map((pick, index) => (
             <TableRow hover key={index} className={classes.rows}>
-              <TableCell>{pick.week}</TableCell>
-              <TableCell>{pick.qb}</TableCell>
+              <TableCell className={classes.importantCell}>{pick.week}</TableCell>
+              <TableCell className={classes.cell}>{pick.qb}</TableCell>
               <TableCell>{pick.qb_points}</TableCell>
               <TableCell>{pick.rb}</TableCell>
               <TableCell>{pick.rb_points}</TableCell>
@@ -64,7 +70,9 @@ export const PickTable = ({ picks = [] }) => {
               <TableCell>{pick.te_points}</TableCell>
               <TableCell>{pick.defense}</TableCell>
               <TableCell>{pick.def_points}</TableCell>
-              <TableCell align="right">{pick.total_points.toFixed(2)}</TableCell>
+              <TableCell align="right" className={classes.importantCell}>
+                {pick.total_points.toFixed(2)}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

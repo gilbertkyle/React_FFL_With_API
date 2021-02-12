@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import { Autocomplete } from "@material-ui/lab";
 import { TextField, Button, Select, InputLabel, MenuItem } from "@material-ui/core";
 import { connect } from "react-redux";
-import { updatePick } from "../../actions/league";
+import { updatePick } from "../../actions/ffl";
 import axios from "axios";
 
 export class AdminPickForm extends Component {

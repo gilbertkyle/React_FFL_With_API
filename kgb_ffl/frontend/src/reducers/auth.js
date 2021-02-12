@@ -39,7 +39,8 @@ export default function(state = initialState, action) {
         ...state,
         ...action.payload,
         isAuthenticated: true,
-        isLoading: false
+        isLoading: false,
+        isCommissioner: action.payload.user.is_commissioner
       };
     case AUTH_ERROR:
     case LOGIN_FAIL:
@@ -51,7 +52,8 @@ export default function(state = initialState, action) {
         token: null,
         user: null,
         isAuthenticated: false,
-        isLoading: false
+        isLoading: false,
+        isCommissioner: false
       };
     default:
       return state;

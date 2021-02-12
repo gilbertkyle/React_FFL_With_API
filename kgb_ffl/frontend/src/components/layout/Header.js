@@ -46,7 +46,6 @@ export class Header extends Component {
 
     return (
       <Navbar bg="dark" variant="dark">
-        {/*<nav className="navbar navbar-expand-sm navbar-dark bg-dark">*/}
         <div className="container">
           <button
             className="navbar-toggler"
@@ -66,7 +65,6 @@ export class Header extends Component {
           </div>
           {isAuthenticated ? authLinks : guestLinks}
         </div>
-        {/*</nav>*/}
       </Navbar>
     );
   }

@@ -1,12 +1,9 @@
-import React, { Fragment } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 
-import { HashRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import { HashRouter as Router, Route, Switch } from "react-router-dom";
 
-import Header from "./layout/Header";
-import Players from "./players/Players";
 import Alerts from "./layout/Alerts";
-import FootballNavbar from "./layout/FootballNavbar";
 import Login from "./accounts/Login";
 import Register from "./accounts/Register";
 import CreateLeague from "./ffl/CreateLeague";
@@ -20,19 +17,29 @@ import PickDetail from "./ffl/PickDetail";
 import PlayerSearch from "./ffl/PlayerSearch";
 import PlayerDetail from "./ffl/PlayerDetail";
 import { Jumbotron } from "./layout/Jumbotron";
+import { Footer } from "./layout/Footer";
+import Navbar from "./layout/Navbar";
 
-import { Container } from "react-bootstrap";
+//import { Container } from "react-bootstrap";
+import { Container } from "@material-ui/core";
 
 import { Provider } from "react-redux";
 import { Provider as AlertProvider } from "react-alert";
+import { ThemeProvider } from "@material-ui/core/styles";
 import AlertTemplate from "react-alert-template-basic";
 import store from "../store";
 
 import { loadUser } from "../actions/auth";
-import { retrieveLeagues, getCurrentWeek, getCurrentYear } from "../actions/league";
+import { retrieveLeagues, getCurrentWeek, getCurrentYear } from "../actions/ffl";
 import AdminIndex from "./ffl/AdminIndex";
 import AdminHome from "./ffl/AdminHome";
 import AdminProfile from "./ffl/AdminProfile";
+
+import theme from "../theme/theme";
+
+const NoMatch = () => {
+  return <h1>No Match!</h1>;
+};
 
 // alert options
 const alertOptions = {
@@ -54,29 +61,33 @@ class App extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <AlertProvider template={AlertTemplate} {...alertOptions}>
-          <Router>
-            <Header />
-            <Jumbotron />
-            <Alerts />
-            <Container className="main-container">
-              <Switch>
-                <AdminRoute exact path="/admin" component={AdminIndex} />
-                <AdminRoute exact path="/admin/:id" component={AdminHome} />
-                <AdminRoute exact path="/admin/:id/:username" component={AdminProfile} />
-                <Route exact path="/login" component={Login} />
-                <Route exact path="/register" component={Register} />
-                <Route exact path="/search" component={PlayerSearch} />
-                <Route exact path="/search/:playerid" component={PlayerDetail} />
-                <PrivateRoute exact path="/league/create" component={CreateLeague} />
-                <PrivateRoute exact path="/" component={() => <LeagueIndex />} />
-                <PrivateRoute exact path="/league/join" component={JoinLeague} />
-                <LeagueRoute exact path="/:id" component={Home} />
-                <PrivateRoute exact path="/:id/picks" component={PickDetail} name="pick-detail" />
-              </Switch>
-            </Container>
-          </Router>
-        </AlertProvider>
+        <ThemeProvider theme={theme}>
+          <AlertProvider template={AlertTemplate} {...alertOptions}>
+            <Router>
+              <Navbar />
+              <Jumbotron />
+              <Alerts />
+              <Container className="main-container">
+                <Switch>
+                  <AdminRoute exact path="/admin" component={AdminIndex} />
+                  <AdminRoute exact path="/admin/:id" component={AdminHome} />
+                  <AdminRoute exact path="/admin/:id/:username" component={AdminProfile} />
+                  <Route exact path="/login" component={Login} />
+                  <Route exact path="/register" component={Register} />
+                  <Route exact path="/search" component={PlayerSearch} />
+                  <Route exact path="/search/:playerid" component={PlayerDetail} />
+                  <PrivateRoute exact path="/league/create" component={CreateLeague} />
+                  <PrivateRoute exact path="/" component={() => <LeagueIndex />} />
+                  <PrivateRoute exact path="/league/join" component={JoinLeague} />
+                  <LeagueRoute exact path="/:id" component={Home} />
+                  <PrivateRoute exact path="/:id/picks" component={PickDetail} name="pick-detail" />
+                  <Route component={NoMatch} />
+                </Switch>
+              </Container>
+              <Footer />
+            </Router>
+          </AlertProvider>
+        </ThemeProvider>
       </Provider>
     );
   }

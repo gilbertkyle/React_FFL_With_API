@@ -1,97 +1,125 @@
-import React, { Component, Fragment } from "react";
-import { Link, Redirect, withRouter } from "react-router-dom";
-import {
-  Navbar,
-  NavDropdown,
-  Form,
-  FormControl,
-  Button,
-  Container,
-  Row,
-  Nav,
-  NavItem
-} from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
-import styled from "styled-components";
-import { connect } from "react-redux";
+import React, { Fragment, useState, useEffect } from "react";
+import { Link, withRouter } from "react-router-dom";
+import { connect, useSelector } from "react-redux";
+import { Toolbar, Button, Menu, MenuItem, Grid, TextField } from "@material-ui/core";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import { makeStyles } from "@material-ui/core/styles";
 
-const Styles = styled.div`
-  * {
-    z-index: 10;
+const useStyles = makeStyles(theme => ({
+  toolbar: {
+    backgroundColor: theme.palette.common.white,
+    border: "1px solid black",
+    borderRadius: "5px 5px 0px 0px"
+  },
+  leagueButton: {
+    "&:focus": {
+      outline: "none"
+    }
+  },
+  center: {
+    margin: "auto 0px"
+  },
+  searchButton: {
+    marginTop: theme.spacing(1),
+    boxShadow: "0px 1px 1px 1px rgba(0,0,0,0.25)",
+    transitionDuration: "0.15s",
+    "&:active": {
+      boxShadow: "0px 0px 0px 0px"
+    }
+  },
+  adminButton: {
+    "&:focus": {
+      outline: "none"
+    }
+  },
+  endIcon: {
+    marginLeft: "0px"
   }
+}));
 
-  .navbar {
-    border-radius: 5px 5px 0px 0px;
-  }
-`;
+export const FootballNavbar = props => {
+  const [leagueMenuAnchor, setLeagueMenuAnchor] = useState(null);
+  const [playerName, setPlayerName] = useState("");
+  const isAdmin = useSelector(state => state.auth.isCommissioner);
 
-export class FootballNavbar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      player: ""
-    };
-  }
+  const classes = useStyles();
 
-  onSubmit = e => {
+  const handleClick = event => {
+    setLeagueMenuAnchor(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setLeagueMenuAnchor(null);
+  };
+
+  const handleSubmit = e => {
     e.preventDefault();
-    const { player } = this.state;
-    this.props.history.push(`/search?player=${player}`);
+    if (!playerName) return;
+    props.history.push(`/search?player=${playerName}`);
   };
 
-  onChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
+  const adminButton = (
+    <Button component={Link} to={"/admin"} className={classes.adminButton}>
+      Admin
+    </Button>
+  );
 
-  render() {
-    const { player } = this.state;
-    const { isCommissioner } = this.props;
+  return (
+    <Toolbar className={classes.toolbar}>
+      <Grid container justify="space-between">
+        <Grid item className={classes.center}>
+          <Button
+            color="inherit"
+            onClick={handleClick}
+            aria-controls="simple-menu"
+            aria-haspopup={true}
+            className={classes.leagueButton}
+            classes={{ endIcon: classes.endIcon }}
+            endIcon={<ArrowDropDownIcon />}
+          >
+            League Menu
+          </Button>
+          {props.isAdmin ? adminButton : <Fragment />}
+        </Grid>
+        <Menu
+          id="league-menu"
+          disableScrollLock
+          keepMounted
+          open={Boolean(leagueMenuAnchor)}
+          onClose={handleClose}
+          anchorEl={leagueMenuAnchor}
+          getContentAnchorEl={null}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          transformOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          {/* setLeagueMenuAchor is called again to the menu goes away */}
+          <MenuItem component={Link} to={"/league/join"} onClick={() => setLeagueMenuAnchor(null)}>
+            Join a League
+          </MenuItem>
+          <MenuItem
+            component={Link}
+            to={"/league/create"}
+            onClick={() => setLeagueMenuAnchor(null)}
+          >
+            Create a league
+          </MenuItem>
+        </Menu>
 
-    const commissionerLinks = (
-      <Nav.Link as={Link} to="/admin">
-        Admin
-      </Nav.Link>
-    );
-
-    return (
-      <Styles>
-        <Navbar bg="light" variant="light" expand="lg">
-          <Navbar.Brand href="#"> Home</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="mr-auto">
-              <NavDropdown title="League" id="basic-nav-dropdown">
-                <LinkContainer to="/league/create">
-                  <NavDropdown.Item>Create a league</NavDropdown.Item>
-                </LinkContainer>
-                <LinkContainer to="/league/join">
-                  <NavDropdown.Item>Join a league</NavDropdown.Item>
-                </LinkContainer>
-              </NavDropdown>
-              {isCommissioner ? commissionerLinks : <Fragment />}
-            </Nav>
-            <Form inline onSubmit={this.onSubmit}>
-              <Form.Control
-                type="text"
-                placeholder="Search"
-                className="mr-sm-2"
-                onChange={this.onChange}
-                value={player}
-                name="player"
-              />
-              <Button variant="outline-success" type="submit">
-                Search
-              </Button>
-            </Form>
-          </Navbar.Collapse>
-        </Navbar>
-      </Styles>
-    );
-  }
-}
+        <Grid item>
+          <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+            <TextField label="Search Player" onChange={e => setPlayerName(e.target.value)} />
+            <Button color="inherit" type="submit" className={classes.searchButton}>
+              Search
+            </Button>
+          </form>
+        </Grid>
+      </Grid>
+    </Toolbar>
+  );
+};
 
 const mapStateToProps = state => ({
-  isCommissioner: state.auth.isCommissioner
+  isAdmin: state.auth.isCommissioner
 });
 
 export default connect(mapStateToProps)(withRouter(FootballNavbar));

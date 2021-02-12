@@ -1,81 +1,64 @@
-import React, { Component, Fragment } from "react";
+import React, { Component, Fragment, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { connect, useSelector, useDispatch } from "react-redux";
 import { createMessage } from "../../actions/messages";
-import { joinLeague } from "../../actions/league";
+import { joinLeague } from "../../actions/ffl";
+import { useHistory } from "react-router-dom";
+import { TextField } from "@material-ui/core";
 
-export class JoinLeague extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: "",
-      password: "",
-      leaguesUpdated: props.leaguesUpdated
-    };
-  }
+const JoinLeague = props => {
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
 
-  static propTypes = {
-    joinLeague: PropTypes.func.isRequired
-  };
+  // useSelector stuff
+  const { leaguesUpdated } = useSelector(state => state.ffl);
+  const { user, isAuthenticated } = useSelector(state => state.auth);
 
-  onSubmit = e => {
+  // Dispatch
+  const dispatch = useDispatch();
+
+  // History
+  const history = useHistory();
+
+  const handleSubmit = e => {
     e.preventDefault();
-    const { name, password } = this.state;
-    const user_id = this.props.user.id;
-    this.props.joinLeague(name, password, user_id);
+    dispatch(joinLeague(name, password, user.id));
   };
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.leaguesUpdated !== this.props.leaguesUpdated) {
-      this.props.history.push("/");
-    }
-  }
+  useEffect(() => {
+    if (leaguesUpdated) history.push("/");
+  }, [leaguesUpdated]);
 
-  onChange = e => this.setState({ [e.target.name]: e.target.value });
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="form-group">
+        <TextField label="Name" variant="outlined" />
+        <label htmlFor="leagueNameInput">League Name</label>
+        <input
+          className="form-control"
+          id="leagueNameInput"
+          aria-describedby="emailHelp"
+          onChange={(e, value) => setName(value)}
+          name="name"
+          value={name}
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="leaguePassword">Password</label>
+        <input
+          type="password"
+          className="form-control"
+          id="leaguePassword"
+          name="password"
+          onChange={(e, value) => setPassword(value)}
+          value={password}
+        />
+      </div>
+      <button type="submit" className="btn btn-primary">
+        Submit
+      </button>
+    </form>
+  );
+};
 
-  render() {
-    const { name, password } = this.state;
-    return (
-      <Fragment>
-        <form onSubmit={this.onSubmit}>
-          <div className="form-group">
-            <label htmlFor="leagueNameInput">League Name</label>
-            <input
-              className="form-control"
-              id="leagueNameInput"
-              aria-describedby="emailHelp"
-              onChange={this.onChange}
-              name="name"
-              value={name}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="leaguePassword">Password</label>
-            <input
-              type="password"
-              className="form-control"
-              id="leaguePassword"
-              name="password"
-              onChange={this.onChange}
-              value={password}
-            />
-          </div>
-          <button type="submit" className="btn btn-primary">
-            Submit
-          </button>
-        </form>
-      </Fragment>
-    );
-  }
-}
-
-const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  user: state.auth.user,
-  leaguesUpdated: state.ffl.leaguesUpdated
-});
-
-export default connect(
-  mapStateToProps,
-  { createMessage, joinLeague }
-)(JoinLeague);
+export default JoinLeague;
