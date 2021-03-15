@@ -18,7 +18,7 @@ const PickDetail = props => {
   };
 
   const pickForm = <PickForm key={week} week={week} />;
-  const table = <LeagueTable picks={leaguePicks} />;
+  const table = <PickTable picks={leaguePicks} />;
   const buttonGroup = (
     <ButtonGroup variant="text">
       {Array.from(new Array(week), (x, i) => i + 1).map((arrayWeek, index) => (

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { logout } from "../../actions/auth";
 import { Dropdown, Navbar, Container } from "react-bootstrap";
