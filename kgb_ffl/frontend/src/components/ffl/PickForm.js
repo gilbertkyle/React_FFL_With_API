@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const PickForm = props => {
+const PickForm = ({ admin = false }) => {
   // State for the user to submit
   const [qb, setQb] = useState({});
   const [rb, setRb] = useState({});
@@ -84,28 +84,30 @@ const PickForm = props => {
       defense
     };
     // check for repeat picks in this league
-    for (var i = 0; i < myPicks.length; i++) {
-      if (myPicks[i].qb_id == qb.id) {
-        createMessage({ qbTaken: `You have already picked ${qb.name} this season` });
-        return;
-      }
-      if (myPicks[i].rb_id == rb.id) {
-        createMessage({ rbTaken: `You have already picked ${rb.name} this season` });
-        return;
-      }
-      if (myPicks[i].wr_id == wr.id) {
-        createMessage({ wrTaken: `You have already picked ${wr.name} this season` });
-        return;
-      }
-      if (myPicks[i].te_id == te.id) {
-        createMessage({ teTaken: `You have already picked ${te.name} this season` });
-        return;
-      }
-      if (myPicks[i].defense_id == defense.id) {
-        createMessage({
-          defenseTaken: `You have already picked ${defense.name} this season`
-        });
-        return;
+    if (!admin) {
+      for (var i = 0; i < myPicks.length; i++) {
+        if (myPicks[i].qb_id == qb.id) {
+          createMessage({ qbTaken: `You have already picked ${qb.name} this season` });
+          return;
+        }
+        if (myPicks[i].rb_id == rb.id) {
+          createMessage({ rbTaken: `You have already picked ${rb.name} this season` });
+          return;
+        }
+        if (myPicks[i].wr_id == wr.id) {
+          createMessage({ wrTaken: `You have already picked ${wr.name} this season` });
+          return;
+        }
+        if (myPicks[i].te_id == te.id) {
+          createMessage({ teTaken: `You have already picked ${te.name} this season` });
+          return;
+        }
+        if (myPicks[i].defense_id == defense.id) {
+          createMessage({
+            defenseTaken: `You have already picked ${defense.name} this season`
+          });
+          return;
+        }
       }
     }
 

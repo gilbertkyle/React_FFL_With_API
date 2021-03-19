@@ -1,9 +1,37 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { retrieveCommishLeagues } from "../../actions/ffl";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
+const AdminIndex = () => {
+  const dispatch = useDispatch();
+  const commishLeagues = useSelector(state => state.admin.commishLeagues);
+
+  useEffect(() => {
+    dispatch(retrieveCommishLeagues());
+  }, []);
+
+  return (
+    <div>
+      <h4>Admin Index</h4>
+      {commishLeagues &&
+        commishLeagues.map((league, index) => {
+          return (
+            <div key={index}>
+              {" "}
+              <Link to={`/admin/${league.id}`}>{league.name}</Link>
+            </div>
+          );
+        })}
+    </div>
+  );
+};
+
+export default AdminIndex;
+
+/*
 export class AdminIndex extends Component {
   static propTypes = {
     commishLeagues: PropTypes.array
@@ -38,3 +66,4 @@ export default connect(
   mapStateToProps,
   { retrieveCommishLeagues }
 )(AdminIndex);
+*/

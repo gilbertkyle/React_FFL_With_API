@@ -11,10 +11,21 @@ import PickForm from "./PickForm";
 const Home = props => {
   const { name } = props.location.state;
   const { id } = props.match.params;
-  const { week, picks, myPicks, pickSubmitted } = useSelector(state => state.ffl);
+  const { week, picks, myPicks, pickSubmitted, leagues } = useSelector(state => state.ffl);
   const { user } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const reloadPicks = () => dispatch({ type: PICK_RELOAD });
+
+  const currentLeague = leagues.filter(league => league.id == id)[0];
+  let isCommish = false;
+
+  // check if current user is in admins array
+  currentLeague.admins.map(admin => {
+    if (admin.id == user.pk) {
+      isCommish = true;
+      return;
+    }
+  });
 
   useEffect(() => {
     dispatch(retrievePicks(id, week));
@@ -28,6 +39,7 @@ const Home = props => {
   return (
     <div>
       <Link to={`/${id}/picks`}>Weekly Detail</Link>
+      {isCommish ? <Link to={`/admin/${id}`}>Commish</Link> : ""}
       <Typography variant="h2">{name}</Typography>
       <PickTable picks={myPicks} />
       <PickForm />

@@ -1,11 +1,44 @@
-import React, { Component, Fragment } from "react";
-import { connect } from "react-redux";
+import React, { Component, Fragment, useEffect, useState } from "react";
+import { connect, useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { ButtonGroup } from "react-bootstrap";
 import { getPicksAdmin } from "../../actions/admin";
 import AdminPickForm from "./AdminPickForm";
-import { withRouter } from "react-router-dom";
+import PickForm from "./PickForm";
+import { withRouter, useParams } from "react-router-dom";
 
+const AdminProfile = () => {
+  const dispatch = useDispatch();
+  const { id, username } = useParams();
+  const [week, setWeek] = useState(1);
+  const picks = useSelector(state => state.admin.picks);
+
+  useEffect(() => {
+    dispatch(getPicksAdmin(id, username));
+  }, []);
+
+  return (
+    <Fragment>
+      <h5>User: {username}</h5>
+      <ButtonGroup size="sm" className="flex-wrap">
+        {picks.map((pick, index) => (
+          <button
+            key={index}
+            className="btn btn-outline-secondary"
+            onClick={e => setWeek(e.target.value)}
+          >
+            {pick.week}
+          </button>
+        ))}
+      </ButtonGroup>
+      <h3>Week: {week}</h3>
+      <PickForm week={week} admin />
+    </Fragment>
+  );
+};
+
+export default AdminProfile;
+/*
 export class AdminProfile extends Component {
   constructor(props) {
     super(props);
@@ -62,3 +95,4 @@ export default connect(
   mapStateToProps,
   { getPicksAdmin }
 )(withRouter(AdminProfile));
+*/
