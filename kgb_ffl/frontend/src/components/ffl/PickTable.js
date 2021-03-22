@@ -23,6 +23,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   rows: {
+    height: "2rem",
     "&:nth-child(odd)": {
       backgroundColor: "rgb(235, 235, 235)"
     }

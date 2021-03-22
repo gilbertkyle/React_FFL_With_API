@@ -76,11 +76,22 @@ class App extends React.Component {
                   <Route exact path="/register" component={Register} />
                   <Route exact path="/search" component={PlayerSearch} />
                   <Route exact path="/search/:playerid" component={PlayerDetail} />
-                  <PrivateRoute exact path="/league/create" component={CreateLeague} />
                   <PrivateRoute exact path="/" component={() => <LeagueIndex />} />
+                  <PrivateRoute exact path="/league/create" component={CreateLeague} />
                   <PrivateRoute exact path="/league/join" component={JoinLeague} />
-                  <LeagueRoute exact path="/:id" component={Home} />
-                  <PrivateRoute exact path="/:id/picks" component={PickDetail} name="pick-detail" />
+                  <Route
+                    component={({ match }) => (
+                      <div>
+                        <LeagueRoute exact path="/:id" component={Home} />
+                        <PrivateRoute
+                          exact
+                          path="/:id/picks"
+                          component={PickDetail}
+                          name="pick-detail"
+                        />
+                      </div>
+                    )}
+                  />
                   <Route component={NoMatch} />
                 </Switch>
               </Container>

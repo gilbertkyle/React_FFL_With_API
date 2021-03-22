@@ -1,110 +1,119 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { Link, Redirect } from "react-router-dom";
-import { connect } from "react-redux";
+import { connect, useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import { register } from "../../actions/auth";
 import { createMessage } from "../../actions/messages";
+import { Grid, TextField, Button, makeStyles } from "@material-ui/core";
 
-export class Register extends Component {
-  state = {
-    username: "",
-    email: "",
-    password: "",
-    password2: ""
-  };
+const useStyles = makeStyles(theme => ({
+  form: {
+    "& > *": {
+      margin: "1rem"
+    }
+  },
+  card: {
+    margin: "auto",
+    marginTop: "5rem",
+    border: "1px solid lightgray",
+    "& > h2": {
+      color: "blue"
+    }
+  },
+  title: {
+    textAlign: "center",
+    margin: "2rem 0rem"
+  }
+}));
 
-  static propTypes = {
-    register: PropTypes.func.isRequired,
-    isAuthenticated: PropTypes.bool
-  };
+const Register = () => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
 
-  onSubmit = e => {
+  const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector(state => state.auth);
+
+  const classes = useStyles();
+
+  const handleSubmit = e => {
     e.preventDefault();
-    const { username, email, password, password2 } = this.state;
     if (password !== password2) {
-      this.props.createMessage({ passwordNotMatch: "Passwords do not match" });
+      dispatch(createMessage({ passwordNotMatch: "Passwords do not match" }));
     } else {
       const newUser = {
         username,
-        password,
-        email
+        email,
+        password
       };
-      this.props.register(newUser);
+      dispatch(register(newUser));
     }
   };
-
-  onChange = e => this.setState({ [e.target.name]: e.target.value });
-
-  render() {
-    if (this.props.isAuthenticated) {
-      return <Redirect to="/" />;
-    }
-    const { username, email, password, password2 } = this.state;
-    return (
-      <div className="col-md-6 m-auto">
-        <div className="card card-body">
-          <h2 className="text-center">Register</h2>
-          <form onSubmit={this.onSubmit}>
-            <div className="form-group">
-              <label>Username</label>
-              <input
-                type="text"
-                className="form-control"
-                name="username"
-                onChange={this.onChange}
-                value={username}
-              />
-            </div>
-            <div className="form-group">
-              <label>Email</label>
-              <input
-                type="email"
-                className="form-control"
-                name="email"
-                onChange={this.onChange}
-                value={email}
-              />
-            </div>
-            <div className="form-group">
-              <label>Password</label>
-              <input
-                type="password"
-                className="form-control"
-                name="password"
-                onChange={this.onChange}
-                value={password}
-              />
-            </div>
-            <div className="form-group">
-              <label>Confirm Password</label>
-              <input
-                type="password"
-                className="form-control"
-                name="password2"
-                onChange={this.onChange}
-                value={password2}
-              />
-            </div>
-            <div className="form-group">
-              <button type="submit" className="btn btn-primary">
-                Register
-              </button>
-            </div>
-            <p>
-              Already have an account? <Link to="/login">Login</Link>
-            </p>
-          </form>
-        </div>
-      </div>
-    );
+  if (isAuthenticated) {
+    return <Redirect to="/" />;
   }
-}
 
-const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
-});
+  return (
+    <Grid container>
+      <Grid container item md={6} className={classes.card}>
+        <Grid item xs={12}>
+          <form onSubmit={handleSubmit} className={classes.form}>
+            <Grid item xs={12}>
+              <h2 className={classes.title}>Register</h2>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="username"
+                value={username}
+                variant="outlined"
+                fullWidth
+                onChange={e => setUsername(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="email"
+                type="email"
+                value={email}
+                variant="outlined"
+                fullWidth
+                onChange={e => setEmail(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="password"
+                type="password"
+                value={password}
+                variant="outlined"
+                fullWidth
+                onChange={e => setPassword(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Confirm password"
+                type="password"
+                value={password2}
+                variant="outlined"
+                fullWidth
+                onChange={e => setPassword2(e.target.value)}
+              />
+            </Grid>
+            <Button variant="contained" type="submit" color="primary">
+              Register
+            </Button>
+            <Grid item xs={12}>
+              <p>
+                Already have an account? <Link to="/login">Login</Link>
+              </p>
+            </Grid>
+          </form>
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+};
 
-export default connect(
-  mapStateToProps,
-  { register, createMessage }
-)(Register);
+export default Register;

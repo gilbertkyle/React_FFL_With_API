@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import { updatePick } from "../../actions/ffl";
 import axios from "axios";
 
+// Deprecated. Please use PickForm component with admin prop instead.
+
 export class AdminPickForm extends Component {
   state = {
     qb: {},
@@ -41,12 +43,12 @@ export class AdminPickForm extends Component {
       .then(res => {
         return res.data;
       })
-      .then(myJson => {
-        let qbs = myJson.filter(player => player.position == "QB");
-        let rbs = myJson.filter(player => player.position == "RB");
-        let wrs = myJson.filter(player => player.position == "WR");
-        let tes = myJson.filter(player => player.position == "TE");
-        let defenses = myJson.filter(player => player.position == "Def");
+      .then(players => {
+        let qbs = players.filter(player => player.position == "QB");
+        let rbs = players.filter(player => player.position == "RB");
+        let wrs = players.filter(player => player.position == "WR");
+        let tes = players.filter(player => player.position == "TE");
+        let defenses = players.filter(player => player.position == "Def");
 
         this.setState({
           qbs,

@@ -3,13 +3,16 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { retrieveLeagues } from "../../actions/ffl";
 import { useSelector, useDispatch } from "react-redux";
-import { Card, CardContent, Grid, Typography } from "@material-ui/core";
+import { Card, Grid, Typography } from "@material-ui/core";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 
 const useStyles = makeStyles(theme => ({
   card: {
     "&:hover": {
-      backgroundColor: "rgba(10,10,10,.15)"
+      backgroundColor: "rgba(10,10,10,.10)"
+    },
+    "& > a": {
+      textDecoration: "none"
     }
   }
 }));
@@ -35,7 +38,6 @@ const LeagueIndex = props => {
               component={Link}
               className={classes.link}
               to={{ pathname: `/${league.id}`, state: { name: league.name } }}
-              style={{ textDecoration: "none" }}
             >
               {league.name}
             </Typography>
