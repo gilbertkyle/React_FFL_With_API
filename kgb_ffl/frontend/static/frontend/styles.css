@@ -9,6 +9,7 @@
     background-size: cover;
     padding: 0px;
     margin: 0px;
+    overflow-y: overlay;
   }
 }
 

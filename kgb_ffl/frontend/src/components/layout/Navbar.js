@@ -37,6 +37,11 @@ const useStyles = makeStyles(theme => ({
     "&:focus": {
       outline: "none"
     }
+  },
+  appBar: {
+    [theme.breakpoints.down("md")]: {
+      height: "5rem"
+    }
   }
 }));
 
@@ -106,7 +111,7 @@ const Navbar = props => {
   );
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" className={classes.appBar}>
       <Container>
         <Toolbar>
           <Typography variant="h6" className={classes.brand} component={Link} to={"/"}>

@@ -78,6 +78,9 @@ const Login = () => {
               <p>
                 Don't have an account? <Link to="/register">Register</Link>
               </p>
+              <small>
+                <a href="accounts/password_reset">Forgot your password?</a>
+              </small>
             </Grid>
           </form>
         </Grid>

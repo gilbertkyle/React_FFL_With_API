@@ -5,7 +5,7 @@ import styled from "styled-components";
 import FootballNavbar from "./FootballNavbar";
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   jumbotron: {
     backgroundColor: "rgba(0, 0, 0, 0.4)",
     width: "100%",
@@ -13,12 +13,16 @@ const useStyles = makeStyles({
     zIndex: "-1",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
+    [theme.breakpoints.down("md")]: {
+      // shrinks to height of FootballNavbar component
+      height: "64px"
+    }
   },
   container: {
     padding: "0px"
   }
-});
+}));
 
 export const Jumbotron = () => {
   const classes = useStyles();
