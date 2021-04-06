@@ -6,7 +6,9 @@ import {
   LOGIN_FAIL,
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
-  REGISTER_FAIL
+  REGISTER_FAIL,
+  PASSWORD_RECOVERY_SENT,
+  EMAIL_RECOVERY_SENT
 } from "../actions/types";
 
 const initialState = {
@@ -14,7 +16,8 @@ const initialState = {
   isAuthenticated: null,
   isCommissioner: false,
   isLoading: false,
-  user: null
+  user: null,
+  passwordRecoverySent: false
 };
 
 export default function(state = initialState, action) {
@@ -54,6 +57,16 @@ export default function(state = initialState, action) {
         isAuthenticated: false,
         isLoading: false,
         isCommissioner: false
+      };
+    case PASSWORD_RECOVERY_SENT:
+      return {
+        ...state,
+        passwordRecoverySent: true
+      };
+    case EMAIL_RECOVERY_SENT:
+      return {
+        ...state,
+        passwordRecoverySent: false
       };
     default:
       return state;

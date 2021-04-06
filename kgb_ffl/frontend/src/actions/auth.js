@@ -9,8 +9,26 @@ import {
   LOGIN_FAIL,
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
-  REGISTER_FAIL
+  REGISTER_FAIL,
+  PASSWORD_RECOVERY_SENT
 } from "./types";
+
+export const resetPassword = email => async dispatch => {
+  const body = JSON.stringify({ email });
+  const config = {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  };
+  try {
+    const response = await axios.post("/api/password_reset/reset_password", body, config);
+    dispatch({
+      type: PASSWORD_RECOVERY_SENT
+    });
+  } catch (error) {
+    dispatch(returnErrors(error.response.data, error.response.status));
+  }
+};
 
 // CHECK TOKEN & LOAD USER
 export const loadUser = () => (dispatch, getState) => {

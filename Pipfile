@@ -16,6 +16,8 @@ pandas = "*"
 nfldfs = "*"
 django-dotenv = "*"
 python-dotenv = "*"
+django-rest-passwordreset = "*"
+cryptography = "==2.8"
 
 [requires]
 python_version = "3.7"

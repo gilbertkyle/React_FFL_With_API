@@ -36,6 +36,8 @@ import AdminHome from "./ffl/AdminHome";
 import AdminProfile from "./ffl/AdminProfile";
 
 import theme from "../theme/theme";
+import PasswordRecovery from "./accounts/PasswordRecovery";
+import PasswordSent from "./accounts/PasswordSent";
 
 const NoMatch = () => {
   return <h1>No Match!</h1>;
@@ -72,6 +74,8 @@ class App extends React.Component {
                   <AdminRoute exact path="/admin" component={AdminIndex} />
                   <AdminRoute exact path="/admin/:id" component={AdminHome} />
                   <AdminRoute exact path="/admin/:id/:username" component={AdminProfile} />
+                  <Route exact path="/account/password_recovery" component={PasswordRecovery} />
+                  <Route exact path="/account/password_sent" component={PasswordSent} />
                   <Route exact path="/login" component={Login} />
                   <Route exact path="/register" component={Register} />
                   <Route exact path="/search" component={PlayerSearch} />
