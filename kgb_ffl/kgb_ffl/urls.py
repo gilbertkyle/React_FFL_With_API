@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.conf.urls import handler404
+from django.conf.urls import handler404, url
 from django.urls import path, include
 from rest_framework import routers
 from ffl.api import CreateLeagueAPI
@@ -35,7 +35,7 @@ urlpatterns = [
     path('', include('accounts.urls')),
     path('', include('ffl.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('api/password_reset',
-         include('django_rest_passwordreset.urls', namespace='password_reset')),
+    path('api/password_reset/',
+         include('django_rest_passwordreset.urls')),
 
 ]

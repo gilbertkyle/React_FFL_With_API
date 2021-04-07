@@ -8,7 +8,8 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
   PASSWORD_RECOVERY_SENT,
-  EMAIL_RECOVERY_SENT
+  EMAIL_RECOVERY_SENT,
+  PASSWORD_CHANGE_SUCCESS
 } from "../actions/types";
 
 const initialState = {
@@ -17,7 +18,8 @@ const initialState = {
   isCommissioner: false,
   isLoading: false,
   user: null,
-  passwordRecoverySent: false
+  passwordRecoverySent: false,
+  passwordChangeSuccess: false
 };
 
 export default function(state = initialState, action) {
@@ -67,6 +69,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         passwordRecoverySent: false
+      };
+    case PASSWORD_CHANGE_SUCCESS:
+      return {
+        ...state,
+        passwordChangeSuccess: true
       };
     default:
       return state;

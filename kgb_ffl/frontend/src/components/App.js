@@ -19,6 +19,7 @@ import PlayerDetail from "./ffl/PlayerDetail";
 import { Jumbotron } from "./layout/Jumbotron";
 import { Footer } from "./layout/Footer";
 import Navbar from "./layout/Navbar";
+import PasswordSet from "./accounts/PasswordSet";
 
 //import { Container } from "react-bootstrap";
 import { Container } from "@material-ui/core";
@@ -76,6 +77,7 @@ class App extends React.Component {
                   <AdminRoute exact path="/admin/:id/:username" component={AdminProfile} />
                   <Route exact path="/account/password_recovery" component={PasswordRecovery} />
                   <Route exact path="/account/password_sent" component={PasswordSent} />
+                  <Route exact path="/account/password_set" component={PasswordSet} />
                   <Route exact path="/login" component={Login} />
                   <Route exact path="/register" component={Register} />
                   <Route exact path="/search" component={PlayerSearch} />

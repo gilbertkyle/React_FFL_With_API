@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'rest_framework',
     'django_rest_passwordreset',
     'ffl',
@@ -152,5 +153,6 @@ STATIC_ROOT = "/home/citizenpain/kgb_ffl/kgb_ffl/frontend/static"
 STATIC_URL = '/static/'
 
 # My Variables
+
 
 CURRENT_YEAR = 2020
