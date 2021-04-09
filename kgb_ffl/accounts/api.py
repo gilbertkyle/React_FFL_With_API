@@ -54,14 +54,12 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         [reset_password_token.user.email]
     )
     msg.attach_alternative(email_html_message, "text/html")
-    print(reset_password_token.user)
     print("password reset token created")
     msg.send()
 
 
 @receiver(post_password_reset)
 def post_password_reset(sender, user, *args, **kwargs):
-    print(user)
     print("password saved")
 
 
