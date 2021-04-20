@@ -1,0 +1,11 @@
+name: FantasyFive Continuous Deployment
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    on: ubuntu-latest
+    steps:
+      - run: npm run build
