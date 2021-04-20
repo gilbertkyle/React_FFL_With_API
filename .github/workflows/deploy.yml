@@ -6,6 +6,6 @@ on:
 
 jobs:
   deploy:
-    on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - run: npm run build
