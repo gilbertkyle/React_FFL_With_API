@@ -6,29 +6,29 @@ import { registerLeague } from "../../actions/ffl";
 import { TextField, Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   inputGroup: {
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   input: {
     maxWidth: "30%",
-    margin: "1rem"
+    margin: "1rem",
   },
   button: {
-    color: theme.palette.common.black
-  }
+    color: theme.palette.common.black,
+  },
 }));
 
-const CreateLeague = props => {
+const CreateLeague = (props) => {
   // set local state variables
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
 
   // get state variables
-  const { user, isAuthenticated } = useSelector(state => state.auth);
-  const { leaguesUpdated } = useSelector(state => state.ffl);
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
+  const { leaguesUpdated } = useSelector((state) => state.ffl);
 
   // get dispatch
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ const CreateLeague = props => {
   const classes = useStyles();
 
   // handleSubmit
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     if (!name || !password) return;
     if (password !== password2) {
       dispatch(createMessage({ passwordNotMatch: "Passwords do not match" }));
@@ -45,8 +45,9 @@ const CreateLeague = props => {
       const newLeague = {
         name: name,
         password: password,
-        user_id: user.id
+        user_id: user.id,
       };
+      console.log(newLeague);
       dispatch(registerLeague(newLeague));
     }
   };
@@ -55,9 +56,29 @@ const CreateLeague = props => {
     <form onSubmit={handleSubmit}>
       <h2>Create a New League</h2>
       <div className={classes.inputGroup}>
-        <TextField className={classes.input} label="League Name" variant="outlined" />
-        <TextField className={classes.input} label="Password" variant="outlined" />
-        <TextField className={classes.input} label="Confirm Password" variant="outlined" />
+        <TextField
+          className={classes.input}
+          label="League Name"
+          variant="outlined"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <TextField
+          className={classes.input}
+          label="Password"
+          variant="outlined"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          type="password"
+        />
+        <TextField
+          className={classes.input}
+          label="Confirm Password"
+          variant="outlined"
+          value={password2}
+          onChange={(e) => setPassword2(e.target.value)}
+          type="password"
+        />
       </div>
       <Button className={classes.button} type="submit">
         Create League

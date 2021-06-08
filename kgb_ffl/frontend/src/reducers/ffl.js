@@ -12,7 +12,8 @@ import {
   PICK_UPDATE_SUCCESS,
   USER_PICK_RETRIEVE_SUCCESS,
   PICK_RELOAD,
-  LOAD_YEAR
+  LOAD_YEAR,
+  GET_PLAYERS,
 } from "../actions/types";
 
 const initialState = {
@@ -20,21 +21,22 @@ const initialState = {
   commishLeagues: null,
   leagueLoading: false,
   leaguesUpdated: false,
-  pickSubmitted: false
+  pickSubmitted: false,
+  players: [],
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
     case LEAGUE_LOADING:
       return {
         ...state,
-        leagueLoading: true
+        leagueLoading: true,
       };
     case LEAGUE_LOADED:
       return {
         ...state,
         leagueLoading: false,
-        leagues: action.payload
+        leagues: action.payload,
       };
     case LEAGUE_CREATE_SUCCESS:
     case LEAGUE_JOIN_SUCCESS:
@@ -42,43 +44,48 @@ export default function(state = initialState, action) {
         ...state,
         leagues: [...state.leagues, action.payload],
         leagueLoading: false,
-        leaguesUpdated: true
+        leaguesUpdated: true,
       };
     case LEAGUE_RETRIEVE_SUCCESS:
       return {
         ...state,
         leagues: action.payload,
-        leagueLoading: false
+        leagueLoading: false,
       };
     case LOAD_WEEK:
       return {
         ...state,
-        week: action.payload.current_week
+        week: action.payload.current_week,
       };
     case LOAD_YEAR:
       return {
         ...state,
-        year: action.payload.current_year
+        year: action.payload.current_year,
       };
     case PICK_RETRIEVE_SUCCESS:
       return {
         ...state,
-        picks: action.payload
+        picks: action.payload,
       };
     case USER_PICK_RETRIEVE_SUCCESS:
       return {
         ...state,
-        myPicks: action.payload
+        myPicks: action.payload,
       };
     case PICK_UPDATE_SUCCESS:
       return {
         ...state,
-        pickSubmitted: true
+        pickSubmitted: true,
       };
     case PICK_RELOAD:
       return {
         ...state,
-        pickSubmitted: false
+        pickSubmitted: false,
+      };
+    case GET_PLAYERS:
+      return {
+        ...state,
+        players: action.payload,
       };
     case LEAGUE_RETRIEVE_FAIL:
     case LEAGUE_CREATE_FAIL:

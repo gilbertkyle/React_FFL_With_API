@@ -6,24 +6,24 @@ import { register } from "../../actions/auth";
 import { createMessage } from "../../actions/messages";
 import { Grid, TextField, Button, makeStyles } from "@material-ui/core";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   form: {
     "& > *": {
-      margin: "1rem"
-    }
+      margin: "1rem",
+    },
   },
   card: {
     margin: "auto",
     marginTop: "5rem",
     border: "1px solid lightgray",
     "& > h2": {
-      color: "blue"
-    }
+      color: "blue",
+    },
   },
   title: {
     textAlign: "center",
-    margin: "2rem 0rem"
-  }
+    margin: "2rem 0rem",
+  },
 }));
 
 const Register = () => {
@@ -33,11 +33,11 @@ const Register = () => {
   const [password2, setPassword2] = useState("");
 
   const dispatch = useDispatch();
-  const { isAuthenticated } = useSelector(state => state.auth);
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   const classes = useStyles();
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (password !== password2) {
       dispatch(createMessage({ passwordNotMatch: "Passwords do not match" }));
@@ -45,7 +45,7 @@ const Register = () => {
       const newUser = {
         username,
         email,
-        password
+        password,
       };
       dispatch(register(newUser));
     }
@@ -68,7 +68,8 @@ const Register = () => {
                 value={username}
                 variant="outlined"
                 fullWidth
-                onChange={e => setUsername(e.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
+                required
               />
             </Grid>
             <Grid item xs={12}>
@@ -78,7 +79,7 @@ const Register = () => {
                 value={email}
                 variant="outlined"
                 fullWidth
-                onChange={e => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -88,7 +89,8 @@ const Register = () => {
                 value={password}
                 variant="outlined"
                 fullWidth
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
+                required
               />
             </Grid>
             <Grid item xs={12}>
@@ -98,7 +100,8 @@ const Register = () => {
                 value={password2}
                 variant="outlined"
                 fullWidth
-                onChange={e => setPassword2(e.target.value)}
+                onChange={(e) => setPassword2(e.target.value)}
+                required
               />
             </Grid>
             <Button variant="contained" type="submit" color="primary">

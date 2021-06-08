@@ -6,24 +6,24 @@ import { login } from "../../actions/auth";
 import { TextField, Button, Grid, makeStyles } from "@material-ui/core";
 import styled from "styled-components";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   form: {
     "& > *": {
-      margin: "1rem"
-    }
+      margin: "1rem",
+    },
   },
   card: {
     margin: "auto",
     marginTop: "5rem",
     border: "1px solid lightgray",
     "& > h2": {
-      color: "blue"
-    }
+      color: "blue",
+    },
   },
   title: {
     textAlign: "center",
-    margin: "2rem 0rem"
-  }
+    margin: "2rem 0rem",
+  },
 }));
 
 const Login = () => {
@@ -31,11 +31,11 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const dispatch = useDispatch();
-  const { isAuthenticated } = useSelector(state => state.auth);
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   const classes = useStyles();
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(login(username, password));
   };
@@ -58,7 +58,8 @@ const Login = () => {
                 variant="outlined"
                 fullWidth
                 value={username}
-                onChange={e => setUsername(e.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
+                required
               />
             </Grid>
             <Grid item xs={12}>
@@ -68,7 +69,8 @@ const Login = () => {
                 variant="outlined"
                 fullWidth
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
+                required
               />
             </Grid>
             <Button type="submit" variant="contained" color="primary">

@@ -1,6 +1,6 @@
 from django.contrib import admin
-from accounts.models import User
-from ffl.models import League, LeagueYear, Pick, Player
+from .models import User
+from .models import League, LeagueYear, Pick, Player
 
 
 # Register your models here.

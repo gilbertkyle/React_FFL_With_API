@@ -1,50 +1,53 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Link, withRouter } from "react-router-dom";
-import { connect, useSelector } from "react-redux";
+import { Link, Redirect, useHistory, withRouter } from "react-router-dom";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { Toolbar, Button, Menu, MenuItem, Grid, TextField } from "@material-ui/core";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import { makeStyles } from "@material-ui/core/styles";
+import { getPlayers } from "../../actions/players";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   toolbar: {
     backgroundColor: theme.palette.common.white,
     border: "1px solid black",
-    borderRadius: "5px 5px 0px 0px"
+    borderRadius: "5px 5px 0px 0px",
   },
   leagueButton: {
     "&:focus": {
-      outline: "none"
-    }
+      outline: "none",
+    },
   },
   center: {
-    margin: "auto 0px"
+    margin: "auto 0px",
   },
   searchButton: {
     marginTop: theme.spacing(1),
     boxShadow: "0px 1px 1px 1px rgba(0,0,0,0.25)",
     transitionDuration: "0.15s",
     "&:active": {
-      boxShadow: "0px 0px 0px 0px"
-    }
+      boxShadow: "0px 0px 0px 0px",
+    },
   },
   adminButton: {
     "&:focus": {
-      outline: "none"
-    }
+      outline: "none",
+    },
   },
   endIcon: {
-    marginLeft: "0px"
-  }
+    marginLeft: "0px",
+  },
 }));
 
-export const FootballNavbar = props => {
+export const FootballNavbar = (props) => {
   const [leagueMenuAnchor, setLeagueMenuAnchor] = useState(null);
   const [playerName, setPlayerName] = useState("");
-  const isAdmin = useSelector(state => state.auth.isCommissioner);
+  const isAdmin = useSelector((state) => state.auth.isCommissioner);
+  const history = useHistory();
+  const dispatch = useDispatch();
 
   const classes = useStyles();
 
-  const handleClick = event => {
+  const handleClick = (event) => {
     setLeagueMenuAnchor(event.currentTarget);
   };
 
@@ -52,10 +55,11 @@ export const FootballNavbar = props => {
     setLeagueMenuAnchor(null);
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!playerName) return;
-    props.history.push(`/search?player=${playerName}`);
+    dispatch(getPlayers({ search: playerName }));
+    return history.replace(`/search?search=${playerName}`);
   };
 
   const adminButton = (
@@ -107,7 +111,7 @@ export const FootballNavbar = props => {
 
         <Grid item>
           <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-            <TextField label="Search Player" onChange={e => setPlayerName(e.target.value)} />
+            <TextField label="Search Player" onChange={(e) => setPlayerName(e.target.value)} />
             <Button color="inherit" type="submit" className={classes.searchButton}>
               Search
             </Button>
@@ -118,8 +122,8 @@ export const FootballNavbar = props => {
   );
 };
 
-const mapStateToProps = state => ({
-  isAdmin: state.auth.isCommissioner
+const mapStateToProps = (state) => ({
+  isAdmin: state.auth.isCommissioner,
 });
 
 export default connect(mapStateToProps)(withRouter(FootballNavbar));

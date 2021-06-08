@@ -47,7 +47,7 @@ const NoMatch = () => {
 // alert options
 const alertOptions = {
   timeout: 3000,
-  position: "top center"
+  position: "top center",
 };
 
 class App extends React.Component {
@@ -80,7 +80,13 @@ class App extends React.Component {
                   <Route exact path="/account/password_set" component={PasswordSet} />
                   <Route exact path="/login" component={Login} />
                   <Route exact path="/register" component={Register} />
-                  <Route exact path="/search" component={PlayerSearch} />
+                  <Route
+                    exact
+                    path="/search"
+                    component={(props) => (
+                      <PlayerSearch {...props} key={window.location.pathname} />
+                    )}
+                  />
                   <Route exact path="/search/:playerid" component={PlayerDetail} />
                   <PrivateRoute exact path="/" component={() => <LeagueIndex />} />
                   <PrivateRoute exact path="/league/create" component={CreateLeague} />

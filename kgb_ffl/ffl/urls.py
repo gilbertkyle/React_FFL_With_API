@@ -14,7 +14,7 @@ urlpatterns = [
     path('api/users', ListUsersAPI.as_view()),
     path('api/league/admin', ListCommishLeaguesAPI.as_view()),
     path('api/admin/picks', AdminRetrievePicksAPI.as_view()),
-
     path('api/current_week', get_current_week),
-    path('api/current_year', get_current_year)
+    path('api/current_year', get_current_year),
+    path('api/invitations', InvitationAPI.as_view())
 ]

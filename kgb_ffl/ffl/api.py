@@ -4,15 +4,21 @@ from django.contrib.auth.hashers import check_password
 from django.contrib.auth import get_user_model
 import datetime
 from rest_framework.decorators import api_view
-from .models import League, LeagueYear, Pick, Player, PlayerWeek
-from .serializers import CreateLeagueSerializer, LeagueSerializer, LeagueAdminSerializer, PickSerializer, PlayerSerializer, PlayerWeekSerializer, UserSerializer, JoinLeagueSerializer, UpdatePickSerializer
+from .models import Invitation, League, LeagueYear, Pick, Player, PlayerWeek
+from .serializers import CreateLeagueSerializer, InvitationSerializer, LeagueSerializer, LeagueAdminSerializer, PickSerializer, PlayerSerializer, PlayerWeekSerializer, UserSerializer, JoinLeagueSerializer, UpdatePickSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics, permissions
 from .ffl_settings import *
 
-
 User = get_user_model()
+
+
+class InvitationAPI(generics.ListCreateAPIView):
+    serializer_class = InvitationSerializer
+
+    def get_queryset(self):
+        return Invitation.objects.all()
 
 
 class AdminRetrievePicksAPI(generics.ListAPIView):
@@ -30,7 +36,7 @@ class PlayerViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PlayerSerializer
 
     def get_queryset(self):
-        player = self.request.query_params.get("player", "")
+        player = self.request.query_params.get("search", "")
         return Player.objects.filter(name__contains=player)
 
 
@@ -107,11 +113,11 @@ class UpdatePicks(generics.RetrieveUpdateAPIView):
         pick.defense = new_picks['defense']['name']
         pick.defense_id = new_picks['defense']['id']
         pick.save()
-        return Response()
+        return Response(status=200)
 
     def partial_update(self, request, *args, **kwargs):
         print("partial update")
-        return Response()
+        return Response(status=200)
 
 
 class CreateLeagueAPI(generics.CreateAPIView):
@@ -170,7 +176,8 @@ class ListLeagueAPI(generics.ListAPIView):
 
     def get_queryset(self):
 
-        user = User.objects.get(username=self.request.query_params['username'])
+        user = User.objects.filter(
+            username=self.request.query_params.get('username', '')).first()
 
         if user:
             return user.leagues.all()

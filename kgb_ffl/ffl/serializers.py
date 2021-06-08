@@ -1,6 +1,12 @@
 from rest_framework import serializers
-from ffl.models import User, Player, League, Defense, Pick, PlayerWeek
+from .models import Invitation, User, Player, League, Defense, Pick, PlayerWeek
 from django.contrib.auth.hashers import make_password
+
+
+class InvitationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Invitation
+        fields = '__all__'
 
 
 class UserSerializer(serializers.ModelSerializer):

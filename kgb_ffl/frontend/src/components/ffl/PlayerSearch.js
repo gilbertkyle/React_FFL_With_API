@@ -1,8 +1,46 @@
-import React, { Component, Fragment } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import queryString from "query-string";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { getPlayers } from "../../actions/players";
+import { useDispatch, useSelector } from "react-redux";
 
+export const PlayerSearch = (props) => {
+  //const [players, setPlayers] = useState([]);
+  const [player, setPlayer] = useState("");
+  const dispatch = useDispatch();
+  const players = useSelector((state) => state.ffl.players);
+
+  const search = queryString.parse(props.location.search);
+
+  useEffect(() => {
+    //dispatch(getPlayers(search));
+  }, []);
+
+  useEffect(() => {
+    const currentPlayer = search.player;
+    if (currentPlayer != player) {
+      setPlayer(currentPlayer);
+    }
+  });
+
+  return (
+    <Fragment key={player}>
+      <h4>Search Players</h4>
+      {players &&
+        players.map((player, index) => {
+          return <PlayerDisplay player={player} />;
+        })}
+    </Fragment>
+  );
+};
+
+export default PlayerSearch;
+
+const PlayerDisplay = ({ player }) => {
+  return <p key={player.id}>{player.name}</p>;
+};
+/*
 export class PlayerSearch extends Component {
   constructor(props) {
     super(props);
@@ -47,3 +85,4 @@ export class PlayerSearch extends Component {
 }
 
 export default PlayerSearch;
+*/

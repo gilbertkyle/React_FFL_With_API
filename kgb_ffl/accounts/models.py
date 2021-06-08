@@ -11,3 +11,7 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+    class Meta:
+        # makes the email field unique
+        unique_together = ('email', )

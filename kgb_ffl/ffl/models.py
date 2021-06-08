@@ -1,9 +1,31 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 import datetime
+from django.db.models import constraints
+
+from django.db.models.fields import related
 User = get_user_model()
 
 # Create your models here.
+
+
+class Invitation(models.Model):
+    sender = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='inviter')
+    receiver = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='invitee')
+    body = models.CharField(max_length=280)
+    created_at = models.DateTimeField('Created at', auto_now_add=True)
+    league = models.ForeignKey('League', on_delete=models.CASCADE)
+
+    def complete(self):
+        self.league.add_user(self.receiver)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['receiver', 'league'], name="unique_league_invite")
+        ]
 
 
 class LeagueProfile(models.Model):
