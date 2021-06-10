@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth import get_user_model
 import datetime
 from django.db.models import constraints
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from django.db.models.fields import related
 User = get_user_model()
@@ -11,9 +13,9 @@ User = get_user_model()
 
 class Invitation(models.Model):
     sender = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='inviter')
+        User, on_delete=models.CASCADE, related_name='sender')
     receiver = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='invitee')
+        User, on_delete=models.CASCADE, related_name='receiver')
     body = models.CharField(max_length=280)
     created_at = models.DateTimeField('Created at', auto_now_add=True)
     league = models.ForeignKey('League', on_delete=models.CASCADE)
@@ -51,6 +53,17 @@ class League(models.Model):
         league_year.create_picks(user)
         league_year.save()
         self.save()
+
+
+"""
+    signal for when Leagues are created
+"""
+
+
+@receiver(post_save, sender=League)
+def create_league_year(sender, instance, created, **kwargs):
+    if created:
+        league_year, new = LeagueYear.objects.get_or_create(league=instance)
 
 
 class LeagueYear(models.Model):
