@@ -11,6 +11,19 @@ User = get_user_model()
 # Create your models here.
 
 
+class Thread(models.Model):
+    title = models.CharField(max_length=280, blank=False, null=False)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField('Created at', auto_now_add=True)
+
+
+class Comment(models.Model):
+    body = models.TextField()
+    poster = models.ForeignKey(User, on_delete=models.CASCADE)
+    thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
+    created_at = models.DateTimeField('Created at', auto_now_add=True)
+
+
 class Invitation(models.Model):
     sender = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='sender')
@@ -24,6 +37,7 @@ class Invitation(models.Model):
         self.league.add_user(self.receiver)
 
     class Meta:
+        # prevents commissioners from inviting the same user more than once
         constraints = [
             models.UniqueConstraint(
                 fields=['receiver', 'league'], name="unique_league_invite")
