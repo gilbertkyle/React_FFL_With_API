@@ -3,23 +3,23 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { retrieveLeagues } from "../../actions/ffl";
 import { useSelector, useDispatch } from "react-redux";
-import { Card, Grid, Typography } from "@material-ui/core";
+import { Card, CardContent, CardActions, Grid, Typography } from "@material-ui/core";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   card: {
     "&:hover": {
-      backgroundColor: "rgba(10,10,10,.10)"
+      backgroundColor: "rgba(10,10,10,.10)",
     },
     "& > a": {
-      textDecoration: "none"
-    }
-  }
+      textDecoration: "none",
+    },
+  },
 }));
 
-const LeagueIndex = props => {
-  const { isAuthenticated, user } = useSelector(state => state.auth);
-  const { leagues, leagueLoaded } = useSelector(state => state.ffl);
+const LeagueIndex = (props) => {
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const { leagues } = useSelector((state) => state.ffl);
   const dispatch = useDispatch();
 
   const classes = useStyles();
@@ -31,16 +31,18 @@ const LeagueIndex = props => {
   const cardLinks = (
     <Grid container>
       {leagues.map((league, index) => (
-        <Grid item xs={12} md={6} key={index}>
+        <Grid item xs={6} md={4} key={index}>
           <Card className={classes.card}>
-            <Typography
-              variant="h3"
-              component={Link}
-              className={classes.link}
-              to={{ pathname: `/${league.id}`, state: { name: league.name } }}
-            >
-              {league.name}
-            </Typography>
+            <CardContent>
+              <Typography
+                variant="h4"
+                component={Link}
+                className={classes.link}
+                to={{ pathname: `/${league.id}`, state: { name: league.name } }}
+              >
+                {league.name}
+              </Typography>
+            </CardContent>
           </Card>
         </Grid>
       ))}
@@ -59,7 +61,7 @@ const LeagueIndex = props => {
 
 LeagueIndex.propTypes = {
   leagues: PropTypes.array,
-  leagueLoaded: PropTypes.bool
+  leagueLoaded: PropTypes.bool,
 };
 
 export default LeagueIndex;

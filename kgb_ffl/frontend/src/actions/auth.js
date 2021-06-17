@@ -12,6 +12,7 @@ import {
   REGISTER_FAIL,
   PASSWORD_RECOVERY_SENT,
   PASSWORD_CHANGE_SUCCESS,
+  LOAD_INVITATIONS,
 } from "./types";
 
 export const changePassword = (password, token) => async (dispatch) => {

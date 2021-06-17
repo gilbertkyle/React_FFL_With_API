@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   AppBar,
@@ -8,50 +8,73 @@ import {
   Button,
   ButtonGroup,
   Menu,
-  MenuItem
+  MenuItem,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { logout } from "../../actions/auth";
+import { loadInvitations } from "../../actions/ffl";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
+import EmailIcon from "@material-ui/icons/Email";
+import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
 import { connect } from "react-redux";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   navLinks: {
     listStyle: "none",
     display: "flex",
     justifyContent: "space-between",
-    margin: "auto 0px auto auto"
+    margin: "auto 0px auto auto",
   },
   brand: {
     "&:hover": {
       textDecoration: "none",
-      color: "white"
+      color: "white",
     },
     color: "white",
     whiteSpace: "nowrap",
-    textDecoration: "none"
+    textDecoration: "none",
   },
   profileButton: {
     "&:focus": {
-      outline: "none"
-    }
+      outline: "none",
+    },
   },
   appBar: {
     [theme.breakpoints.down("md")]: {
-      height: "5rem"
-    }
-  }
+      height: "5rem",
+    },
+  },
+  emailIcon: {
+    position: "relative",
+  },
+  messageIcon: {
+    position: "absolute",
+    color: "red",
+    top: "0px",
+    left: "1.5rem",
+    transform: "scale(.9)",
+    opacity: ".8",
+  },
+  messageNumber: {
+    position: "absolute",
+    color: "white",
+    zIndex: "10",
+    fontSize: ".75rem",
+    top: "0px",
+    left: "2rem",
+  },
 }));
 
-const Navbar = props => {
-  const user = useSelector(state => state.auth.user);
+const Navbar = (props) => {
+  const user = useSelector((state) => state.auth.user);
+  const messages = useSelector((state) => state.ffl.invitations);
   const [anchorElement, setAnchorElement] = React.useState(null);
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const handleClick = event => {
+  const handleClick = (event) => {
     setAnchorElement(event.currentTarget);
   };
 
@@ -59,8 +82,23 @@ const Navbar = props => {
     setAnchorElement(null);
   };
 
+  useEffect(() => {
+    dispatch(loadInvitations(user?.username));
+  }, [user]);
+
+  const messageBubble = (
+    <div>
+      <ChatBubbleIcon className={classes.messageIcon}></ChatBubbleIcon>
+      <span className={classes.messageNumber}>{messages.length}</span>
+    </div>
+  );
+
   const authLinks = (
     <Fragment>
+      <Button color="inherit" startIcon={<EmailIcon />} className={classes.emailIcon}>
+        {messages.length ? messageBubble : <React.Fragment />}
+      </Button>
+
       <Button
         aria-controls="simple-menu"
         aria-haspopup={true}
@@ -125,10 +163,7 @@ const Navbar = props => {
 };
 
 Navbar.propTypes = {
-  logout: PropTypes.func.isRequired
+  logout: PropTypes.func.isRequired,
 };
 
-export default connect(
-  null,
-  { logout }
-)(Navbar);
+export default connect(null, { logout })(Navbar);

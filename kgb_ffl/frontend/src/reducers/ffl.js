@@ -14,6 +14,7 @@ import {
   PICK_RELOAD,
   LOAD_YEAR,
   GET_PLAYERS,
+  LOAD_INVITATIONS,
 } from "../actions/types";
 
 const initialState = {
@@ -23,6 +24,8 @@ const initialState = {
   leaguesUpdated: false,
   pickSubmitted: false,
   players: [],
+  invitationsLoaded: false,
+  invitations: [],
 };
 
 export default function (state = initialState, action) {
@@ -86,6 +89,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         players: action.payload,
+      };
+    case LOAD_INVITATIONS:
+      return {
+        ...state,
+        invitationsLoaded: true,
+        invitations: action.payload,
       };
     case LEAGUE_RETRIEVE_FAIL:
     case LEAGUE_CREATE_FAIL:

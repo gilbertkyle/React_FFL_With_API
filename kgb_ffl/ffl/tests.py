@@ -63,3 +63,13 @@ class LeagueModelTests(TestCase):
         user = User.objects.create(username="test_user")
         league.add_user(user)
         self.assertIn(user, league.users.all())
+
+    def test_create_league_profile(self):
+        """
+            Check if a LeagueYear object is created
+        """
+        user = User.objects.create(username="kyle")
+        league = League.objects.create(name="test league")
+        league.add_user(user)
+        league_years = league.years.all()
+        self.assertTrue(league_years)

@@ -1,6 +1,20 @@
 from rest_framework import serializers
-from .models import Invitation, User, Player, League, Defense, Pick, PlayerWeek
+from .models import Comment, Invitation, Thread, User, Player, League, Defense, Pick, PlayerWeek
 from django.contrib.auth.hashers import make_password
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = '__all__'
+
+
+class ThreadSerializer(serializers.ModelSerializer):
+    comments = CommentSerializer(many=True, required=False)
+
+    class Meta:
+        model = Thread
+        fields = '__all__'
 
 
 class InvitationSerializer(serializers.ModelSerializer):
@@ -82,7 +96,6 @@ class LeagueSerializer(serializers.ModelSerializer):
             password=make_password(validated_data['password'])
         )
         league.save()
-        print(validated_data)
         league.admins.add(User.objects.get(pk=validated_data['user_id']))
         league.save()
         return league
@@ -99,7 +112,6 @@ class LeagueAdminSerializer(serializers.Serializer):
             password=make_password(validated_data['password'])
         )
         league.save()
-        print(validated_data)
         league.admins.add(User.objects.get(pk=validated_data['user_id']))
         league.save()
         return league
@@ -120,16 +132,18 @@ class CreateLeagueSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = League
-        fields = ['name', 'password', 'user_id']
+        fields = ['name', 'password', 'is_private', 'user_id']
         extra_kwargs = {
             'password': {'write_only': True}
         }
 
     def create(self, validated_data):
+        print(validated_data)
         hashed_password = make_password(validated_data['password'])
         league = League.objects.create(
             name=validated_data['name'],
-            password=hashed_password
+            password=hashed_password,
+            is_private=validated_data['is_private']
         )
         user = User.objects.get(pk=validated_data['user_id'])
         league.admins.add(user)

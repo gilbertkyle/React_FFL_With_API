@@ -35,6 +35,7 @@ import { retrieveLeagues, getCurrentWeek, getCurrentYear } from "../actions/ffl"
 import AdminIndex from "./ffl/AdminIndex";
 import AdminHome from "./ffl/AdminHome";
 import AdminProfile from "./ffl/AdminProfile";
+import Profile from "./accounts/Profile";
 
 import theme from "../theme/theme";
 import PasswordRecovery from "./accounts/PasswordRecovery";
@@ -87,6 +88,7 @@ class App extends React.Component {
                       <PlayerSearch {...props} key={window.location.pathname} />
                     )}
                   />
+                  <PrivateRoute exact path="/:id/profile" component={Profile} />
                   <Route exact path="/search/:playerid" component={PlayerDetail} />
                   <PrivateRoute exact path="/" component={() => <LeagueIndex />} />
                   <PrivateRoute exact path="/league/create" component={CreateLeague} />

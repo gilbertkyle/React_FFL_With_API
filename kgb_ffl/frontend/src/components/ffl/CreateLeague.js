@@ -3,20 +3,22 @@ import { createMessage } from "../../actions/messages";
 import { connect, useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { registerLeague } from "../../actions/ffl";
-import { TextField, Button } from "@material-ui/core";
+import { TextField, Button, Checkbox, FormControlLabel } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
-  inputGroup: {
-    display: "flex",
-    flexDirection: "column",
+  header: {
+    paddingTop: "1rem",
   },
   input: {
-    maxWidth: "30%",
+    width: "40%",
     margin: "1rem",
   },
   button: {
     color: theme.palette.common.black,
+  },
+  checkbox: {
+    marginLeft: "1rem",
   },
 }));
 
@@ -25,6 +27,7 @@ const CreateLeague = (props) => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
+  const [isPrivate, setIsPrivate] = useState(false);
 
   // get state variables
   const { user, isAuthenticated } = useSelector((state) => state.auth);
@@ -36,26 +39,30 @@ const CreateLeague = (props) => {
   // get styles
   const classes = useStyles();
 
-  // handleSubmit
+  // form submission
   const handleSubmit = (e) => {
     if (!name || !password) return;
     if (password !== password2) {
       dispatch(createMessage({ passwordNotMatch: "Passwords do not match" }));
-    } else {
-      const newLeague = {
-        name: name,
-        password: password,
-        user_id: user.id,
-      };
-      console.log(newLeague);
-      dispatch(registerLeague(newLeague));
+      return;
     }
+    const newLeague = {
+      name: name,
+      password: password,
+      user_id: user.id,
+      is_private: isPrivate,
+    };
+    dispatch(registerLeague(newLeague));
+  };
+
+  const handleChange = (e) => {
+    setIsPrivate(e.target.checked);
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Create a New League</h2>
-      <div className={classes.inputGroup}>
+      <h2 className={classes.header}>Create a New League</h2>
+      <div className={classes.formRow}>
         <TextField
           className={classes.input}
           label="League Name"
@@ -63,6 +70,8 @@ const CreateLeague = (props) => {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
+      </div>
+      <div>
         <TextField
           className={classes.input}
           label="Password"
@@ -71,16 +80,31 @@ const CreateLeague = (props) => {
           onChange={(e) => setPassword(e.target.value)}
           type="password"
         />
-        <TextField
-          className={classes.input}
-          label="Confirm Password"
-          variant="outlined"
-          value={password2}
-          onChange={(e) => setPassword2(e.target.value)}
-          type="password"
-        />
+        <div>
+          <TextField
+            className={classes.input}
+            label="Confirm Password"
+            variant="outlined"
+            value={password2}
+            onChange={(e) => setPassword2(e.target.value)}
+            type="password"
+          />
+        </div>
       </div>
-      <Button className={classes.button} type="submit">
+      <div>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={isPrivate}
+              onChange={handleChange}
+              label="Private League"
+              className={classes.checkbox}
+            ></Checkbox>
+          }
+          label="Private League"
+        ></FormControlLabel>
+      </div>
+      <Button className={classes.button} type="submit" variant="contained">
         Create League
       </Button>
     </form>

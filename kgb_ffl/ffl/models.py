@@ -20,7 +20,8 @@ class Thread(models.Model):
 class Comment(models.Model):
     body = models.TextField()
     poster = models.ForeignKey(User, on_delete=models.CASCADE)
-    thread = models.ForeignKey(Thread, on_delete=models.CASCADE)
+    thread = models.ForeignKey(
+        Thread, on_delete=models.CASCADE, related_name="comments")
     created_at = models.DateTimeField('Created at', auto_now_add=True)
 
 
@@ -45,17 +46,27 @@ class Invitation(models.Model):
 
 
 class LeagueProfile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    league = models.OneToOneField("League", on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    league = models.ForeignKey("League", on_delete=models.CASCADE)
     team_name = models.CharField(max_length=40, null=True, default="")
 
     def __str__(self):
+        if not self.team_name:
+            return self.user.username
         return self.team_name
+
+    class Meta:
+        # only allows for 1 profile for each user/ league combo
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'league'], name="unique_profile")
+        ]
 
 
 class League(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True, unique=True)
     password = models.CharField(max_length=150, null=True, blank=True)
+    is_private = models.BooleanField(default=False)
     admins = models.ManyToManyField(User, blank=True)
 
     def __str__(self):

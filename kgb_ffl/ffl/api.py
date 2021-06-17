@@ -18,7 +18,11 @@ class InvitationAPI(generics.ListCreateAPIView):
     serializer_class = InvitationSerializer
 
     def get_queryset(self):
-        return Invitation.objects.all()
+        options = {}
+        user = User.objects.filter(
+            username=self.request.query_params.get("username", "")).first()
+        options["receiver"] = user
+        return Invitation.objects.filter(**options)
 
 
 class AdminRetrievePicksAPI(generics.ListAPIView):
@@ -130,7 +134,6 @@ class CreateLeagueAPI(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         league = serializer.save()
-        current_year = datetime.datetime.now().year
         league_year = LeagueYear()                      # Create a LeagueYear object
         league_year.league = league                     # Assign it to current league
         league_year.save()
