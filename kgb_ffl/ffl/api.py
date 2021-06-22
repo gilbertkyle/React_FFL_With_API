@@ -4,40 +4,58 @@ from django.contrib.auth.hashers import check_password
 from django.contrib.auth import get_user_model
 import datetime
 from rest_framework.decorators import api_view
-from .models import Invitation, League, LeagueYear, Pick, Player, PlayerWeek
-from .serializers import CreateLeagueSerializer, InvitationSerializer, LeagueSerializer, LeagueAdminSerializer, PickSerializer, PlayerSerializer, PlayerWeekSerializer, UserSerializer, JoinLeagueSerializer, UpdatePickSerializer
+from .models import Invitation, League, LeagueYear, Pick, Player, PlayerWeek, Thread
+from .serializers import CreateLeagueSerializer, InvitationSerializer, LeagueSerializer, LeagueAdminSerializer, PickSerializer, PlayerSerializer, PlayerWeekSerializer, UserSerializer, JoinLeagueSerializer, UpdatePickSerializer, ThreadSerializer, CommentSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics, permissions
 from .ffl_settings import *
+from knox.auth import TokenAuthentication
 
 User = get_user_model()
 
 
+class ThreadDetailAPI(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ThreadSerializer
+    lookup_field = 'id'
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
+
+
+class ThreadAPI(generics.ListCreateAPIView):
+    serializer_class = ThreadSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        league = self.request.query_params.get("league", )
+        return Thread.objects.all().order_by("-updated_at")
+
+
 class InvitationAPI(generics.ListCreateAPIView):
     serializer_class = InvitationSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         options = {}
-        user = User.objects.filter(
-            username=self.request.query_params.get("username", "")).first()
-        options["receiver"] = user
+        options["receiver"] = self.request.user
         return Invitation.objects.filter(**options)
 
 
 class AdminRetrievePicksAPI(generics.ListAPIView):
     serializer_class = PickSerializer
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
 
     def get_queryset(self):
-        user = User.objects.filter(
-            username=self.request.query_params.get("username", "")).first()
         league = self.request.query_params.get("league", 0)
-        return Pick.objects.filter(user=user, league=league)
+        return Pick.objects.filter(user=self.request.user, league=league)
 
 
 class PlayerViewSet(viewsets.ReadOnlyModelViewSet):
-
     serializer_class = PlayerSerializer
+    permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
         player = self.request.query_params.get("search", "")
@@ -47,6 +65,7 @@ class PlayerViewSet(viewsets.ReadOnlyModelViewSet):
 class ListUsersAPI(generics.ListAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         league = self.request.query_params.get("league", 0)
@@ -57,6 +76,7 @@ class ListUsersAPI(generics.ListAPIView):
 
 class ListCommishLeaguesAPI(generics.ListAPIView):
     serializer_class = LeagueSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         # returns all of the leagues that have the user as a commissioner
@@ -68,6 +88,7 @@ class ListPicks(generics.ListAPIView):
     Returns all picks for a particular user, league and year
     """
     serializer_class = PickSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         """
@@ -77,7 +98,7 @@ class ListPicks(generics.ListAPIView):
         """
         filters = {}
         week = self.request.query_params.get('current_week', 0)
-        username = self.request.query_params.get('username', '')
+        username = self.request.user.username
         league_id = self.request.query_params.get('leagueId', 0)
         year = CURRENT_YEAR
         if username:
@@ -99,6 +120,7 @@ class UpdatePicks(generics.RetrieveUpdateAPIView):
     """
     serializer_class = UpdatePickSerializer
     lookup_field = 'id'
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return Pick.objects.all()
@@ -120,7 +142,7 @@ class UpdatePicks(generics.RetrieveUpdateAPIView):
         return Response(status=200)
 
     def partial_update(self, request, *args, **kwargs):
-        print("partial update")
+        print("Partial Update?")
         return Response(status=200)
 
 
@@ -129,6 +151,7 @@ class CreateLeagueAPI(generics.CreateAPIView):
         Creates a league and adds the creator to the admin list
     """
     serializer_class = CreateLeagueSerializer
+    permission_classes = [permissions.AllowAny]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -139,8 +162,7 @@ class CreateLeagueAPI(generics.CreateAPIView):
         league_year.save()
         # Success!
         # Now to create all of the pick objects for the creator of the league and attach them to the league year
-        user_id = request.data['user_id']
-        user = User.objects.get(id=user_id)
+        user = self.request.user
 
         user.is_commissioner = True
         user.save()
@@ -157,6 +179,7 @@ class CreateLeagueAPI(generics.CreateAPIView):
 class JoinLeagueAPI(generics.UpdateAPIView):
     serializer_class = LeagueAdminSerializer
     queryset = League.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
 
     def update(self, request, *args, **kwargs):
         league = League.objects.get(name=request.data['name'])
@@ -178,17 +201,14 @@ class ListLeagueAPI(generics.ListAPIView):
     serializer_class = LeagueSerializer
 
     def get_queryset(self):
-
-        user = User.objects.filter(
-            username=self.request.query_params.get('username', '')).first()
-
-        if user:
-            return user.leagues.all()
+        if self.request.user:
+            return self.request.user.leagues.all()
         return League.objects.none()
 
 
 class RetrieveLeagueAPI(generics.RetrieveAPIView):
     serializer_class = LeagueSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         id = self.kwargs['pk']

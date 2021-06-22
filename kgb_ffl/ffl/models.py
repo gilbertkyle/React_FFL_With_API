@@ -15,6 +15,7 @@ class Thread(models.Model):
     title = models.CharField(max_length=280, blank=False, null=False)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField('Created at', auto_now_add=True)
+    updated_at = models.DateTimeField("Updated at", auto_now_add=True)
 
 
 class Comment(models.Model):
@@ -23,6 +24,13 @@ class Comment(models.Model):
     thread = models.ForeignKey(
         Thread, on_delete=models.CASCADE, related_name="comments")
     created_at = models.DateTimeField('Created at', auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        """
+            Updates the 
+        """
+        self.thread.update(updated_at=datetime.datetime.now())
+        super(Comment, self).save(*args, **kwargs)
 
 
 class Invitation(models.Model):
