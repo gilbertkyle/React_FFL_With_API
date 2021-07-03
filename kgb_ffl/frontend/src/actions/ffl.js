@@ -15,17 +15,39 @@ import {
   LEAGUE_COMMISH_RETRIEVE_SUCCESS,
   RETRIEVE_LEAGUE_USERS,
   LOAD_INVITATIONS,
+  DELETE_INVITATION,
+  ACCEPT_INVITATION,
 } from "./types";
 import { returnErrors } from "./messages";
 import { tokenConfig } from "./auth";
 
-export const loadInvitations = (username) => async (dispatch) => {
-  const params = {
-    username,
-  };
+export const deleteInvitation = (id) => async (dispatch, getState) => {
   try {
-    const response = await axios.get("/api/invitations", { params });
-    console.log(response);
+    const response = await axios.delete(`/api/invitations/${id}`, tokenConfig(getState));
+    dispatch({
+      type: DELETE_INVITATION,
+      payload: response.data,
+    });
+  } catch (error) {
+    dispatch(returnErrors(error.response.data, error.response.status));
+  }
+};
+
+export const acceptInvitation = (id) => async (dispatch, getState) => {
+  try {
+    const response = axios.post(`/api/invitations/${id}`, tokenConfig(getState));
+    dispatch({
+      type: ACCEPT_INVITATION,
+      payload: response.data,
+    });
+  } catch (error) {
+    dispatch(returnErrors(error.response.data, error.response.status));
+  }
+};
+
+export const loadInvitations = () => async (dispatch, getState) => {
+  try {
+    const response = await axios.get("/api/invitations", tokenConfig(getState));
     dispatch({
       type: LOAD_INVITATIONS,
       payload: response.data,
@@ -35,193 +57,125 @@ export const loadInvitations = (username) => async (dispatch) => {
   }
 };
 
-export const retrieveCommishLeagues = () => (dispatch, getState) => {
-  axios
-    .get("/api/league/admin", tokenConfig(getState))
-    .then((response) => {
-      dispatch({
-        type: LEAGUE_COMMISH_RETRIEVE_SUCCESS,
-        payload: response.data,
-      });
-    })
-    .catch((error) => {
-      dispatch(returnErrors(error.response.data, error.response.status));
+export const retrieveCommishLeagues = () => async (dispatch, getState) => {
+  try {
+    const response = await axios.get("/api/league/admin");
+    dispatch({
+      type: LEAGUE_COMMISH_RETRIEVE_SUCCESS,
+      payload: response.data,
     });
+  } catch (error) {
+    dispatch(returnErrors(error.response.data, error.response.status));
+  }
 };
 
-export const updatePick = (pickId, picks) => (dispatch) => {
-  const config = {
-    headers: {
-      "Content-type": "application/json",
-    },
-  };
-
+export const updatePick = (pickId, picks) => async (dispatch, getState) => {
   const body = JSON.stringify(picks);
 
-  axios
-    .put(`/api/picks/${pickId}`, body, config)
-    .then((res) => {
-      dispatch({
-        type: PICK_UPDATE_SUCCESS,
-        payload: res.data,
-      });
-    })
-    .catch((err) => {
-      dispatch(returnErrors(err.response.data, err.response.status));
+  try {
+    const response = await axios.put(`/api/picks/${pickId}`, body, tokenConfig(getState));
+    dispatch({
+      type: PICK_UPDATE_SUCCESS,
+      payload: response.data,
     });
+  } catch (error) {
+    dispatch(returnErrors(err.response.data, err.response.status));
+  }
 };
 
-export const retrievePicks = (leagueId, current_week) => (dispatch) => {
-  const config = {
-    headers: {
-      "Content-type": "application/json",
-    },
-  };
-
+export const retrievePicks = (leagueId, current_week) => async (dispatch, getState) => {
   const params = { leagueId, current_week };
 
-  axios
-    .get("/api/picks", { params }, config)
-    .then((res) => {
-      dispatch({
-        type: PICK_RETRIEVE_SUCCESS,
-        payload: res.data,
-      });
-    })
-    .catch((err) => {
-      dispatch(returnErrors(err.response.data, err.response.status));
+  try {
+    const response = await axios.get("/api/picks", { params }, tokenConfig(getState));
+    dispatch({
+      type: PICK_RETRIEVE_SUCCESS,
+      payload: response.data,
     });
+  } catch (error) {
+    dispatch(returnErrors(err.response.data, err.response.status));
+  }
 };
 
-export const retrieveMyPicks = (leagueId, username) => (dispatch) => {
-  const config = {
-    headers: {
-      "Content-type": "application/json",
-    },
-  };
-
+export const retrieveMyPicks = (leagueId, username) => async (dispatch, getState) => {
   const params = { leagueId, username };
 
-  axios
-    .get("/api/picks", { params }, config)
-    .then((res) => {
-      dispatch({
-        type: USER_PICK_RETRIEVE_SUCCESS,
-        payload: res.data,
-      });
-    })
-    .catch((err) => {
-      dispatch(returnErrors(err.response.data, err.response.status));
+  try {
+    const response = await axios.get("/api/picks", { params }, tokenConfig(getState));
+    dispatch({
+      type: USER_PICK_RETRIEVE_SUCCESS,
+      payload: response.data,
     });
+  } catch (error) {
+    dispatch(returnErrors(error.response.data, error.response.message));
+  }
 };
 
-export const retrieveLeagues = (username) => (dispatch) => {
+export const retrieveLeagues = () => async (dispatch, getState) => {
   dispatch({ type: LEAGUE_LOADING });
 
-  const config = {
-    headers: {
-      "Content-type": "application/json",
-    },
-  };
-
-  const params = {
-    username,
-  };
-
-  axios
-    .get("/api/league/retrieve", { params }, config)
-    .then((res) => {
-      dispatch({
-        type: LEAGUE_RETRIEVE_SUCCESS,
-        payload: res.data,
-      });
-    })
-    .catch((err) => {
-      dispatch(returnErrors(err.response.data, err.response.status));
+  try {
+    const response = await axios.get("/api/league/retrieve", tokenConfig(getState));
+    dispatch({
+      type: LEAGUE_RETRIEVE_SUCCESS,
+      payload: response.data,
     });
+  } catch (error) {
+    dispatch(returnErrors(error.response.data, error.response.status));
+  }
 };
 
 export const registerLeague =
   ({ name, password, user_id, is_private }) =>
-  (dispatch) => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
+  async (dispatch, getState) => {
     // Request Body
     const body = JSON.stringify({ name, password, user_id, is_private });
 
-    axios
-      .post("/api/league/register", body, config)
-      .then((res) => {
-        dispatch({
-          type: LEAGUE_CREATE_SUCCESS,
-          payload: res.data,
-        });
-      })
-      .catch((err) => {
-        dispatch(returnErrors(err.response.data, err.response.status));
+    try {
+      const response = await axios.post("/api/league/register", body, tokenConfig(getState));
+      dispatch({
+        type: LEAGUE_CREATE_SUCCESS,
+        payload: res.data,
       });
+    } catch (error) {
+      dispatch(returnErrors(err.response.data, err.response.status));
+    }
   };
 
-export const joinLeague = (name, password, user_id) => (dispatch) => {
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-
+export const joinLeague = (name, password, user_id) => async (dispatch, getState) => {
   const body = JSON.stringify({ name, password, user_id });
 
-  axios
-    .put("/api/league/join", body, config)
-    .then((res) => {
-      dispatch({
-        type: LEAGUE_JOIN_SUCCESS,
-        payload: res.data,
-      });
-    })
-    .catch((err) => {
-      dispatch(returnErrors(err.response.data, err.response.status));
+  try {
+    const response = await axios.put("/api/league/join", body, tokenConfig(getState));
+    dispatch({
+      type: LEAGUE_JOIN_SUCCESS,
+      payload: response.data,
     });
+  } catch (error) {
+    dispatch(returnErrors(err.response.data, err.response.status));
+  }
 };
 
-export const getCurrentWeek = () => (dispatch) => {
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-  axios
-    .get("/api/current_week")
-    .then((res) => {
-      dispatch({
-        type: LOAD_WEEK,
-        payload: res.data,
-      });
-    })
-    .catch((err) => {
-      dispatch(returnErrors(err.response.data, err.response.status));
+export const getCurrentWeek = () => async (dispatch) => {
+  try {
+    const response = await axios.get("/api/current_week");
+    dispatch({
+      type: LOAD_WEEK,
+      payload: response.data,
     });
+  } catch (error) {
+    dispatch(returnErrors(err.response.data, err.response.status));
+  }
 };
 
-export const getCurrentYear = () => (dispatch) => {
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-  axios
-    .get("/api/current_year")
-    .then((response) => {
-      dispatch({
-        type: LOAD_YEAR,
-        payload: response.data,
-      });
-    })
-    .catch((error) => {
-      dispatch(returnErrors(error.response.data, error.response.status));
+export const getCurrentYear = () => async (dispatch) => {
+  try {
+    const response = await axios.get("/api/current_year");
+    dispatch({
+      type: LOAD_YEAR,
+      payload: response.data,
     });
+  } catch (error) {
+    dispatch(returnErrors(error.response.data, error.response.status));
+  }
 };

@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 from pathlib import Path
+from django.apps import AppConfig
+
+AppConfig.default = False
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -53,7 +56,9 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',)
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 25
 }
 
 REST_KNOX = {
@@ -151,6 +156,8 @@ PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 #STATIC_ROOT = os.path.join(PROJECT_DIR, 'frontend/static')
 STATIC_ROOT = "/home/citizenpain/kgb_ffl/kgb_ffl/frontend/static"
 STATIC_URL = '/static/'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # My Variables
 

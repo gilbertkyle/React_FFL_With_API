@@ -25,7 +25,7 @@ const LeagueIndex = (props) => {
   const classes = useStyles();
 
   useEffect(() => {
-    dispatch(retrieveLeagues(user.username));
+    dispatch(retrieveLeagues());
   }, []);
 
   const cardLinks = (

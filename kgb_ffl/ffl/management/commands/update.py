@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
-from ffl.ffl_settings import CURRENT_YEAR, get_week
+from ...ffl_settings import CURRENT_YEAR, get_week
 from nfldfs import games as games
-from ffl.models import Player, Pick, PlayerWeek
+from ...models import Player, Pick, PlayerWeek
 
 
 class Command(BaseCommand):

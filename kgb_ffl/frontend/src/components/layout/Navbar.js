@@ -83,7 +83,7 @@ const Navbar = (props) => {
   };
 
   useEffect(() => {
-    dispatch(loadInvitations(user?.username));
+    dispatch(loadInvitations());
   }, [user]);
 
   const messageBubble = (
@@ -95,9 +95,11 @@ const Navbar = (props) => {
 
   const authLinks = (
     <Fragment>
-      <Button color="inherit" startIcon={<EmailIcon />} className={classes.emailIcon}>
-        {messages.length ? messageBubble : <React.Fragment />}
-      </Button>
+      <Link to="/invitations">
+        <Button color="inherit" startIcon={<EmailIcon />} className={classes.emailIcon}>
+          {messages.length ? messageBubble : <React.Fragment />}
+        </Button>
+      </Link>
 
       <Button
         aria-controls="simple-menu"

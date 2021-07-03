@@ -1,16 +1,18 @@
 from django.conf import settings
-from rest_framework import status, viewsets
+from django.db.models import query
+from rest_framework import serializers, status, viewsets
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import get_user_model
 import datetime
 from rest_framework.decorators import api_view
 from .models import Invitation, League, LeagueYear, Pick, Player, PlayerWeek, Thread
-from .serializers import CreateLeagueSerializer, InvitationSerializer, LeagueSerializer, LeagueAdminSerializer, PickSerializer, PlayerSerializer, PlayerWeekSerializer, UserSerializer, JoinLeagueSerializer, UpdatePickSerializer, ThreadSerializer, CommentSerializer
+from .serializers import CreateLeagueSerializer, InvitationSerializer, LeagueSerializer, LeagueAdminSerializer, PickSerializer, PlayerSerializer, PlayerWeekSerializer, UserSerializer, JoinLeagueSerializer, UpdatePickSerializer, ThreadSerializer, CommentSerializer, PlayerDetailSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics, permissions
 from .ffl_settings import *
 from knox.auth import TokenAuthentication
+from django.shortcuts import get_object_or_404
 
 User = get_user_model()
 
@@ -28,8 +30,10 @@ class ThreadAPI(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        league = self.request.query_params.get("league", )
-        return Thread.objects.all().order_by("-updated_at")
+        league_id = self.request.query_params.get("league_id", 0)
+        if not league_id:
+            return Thread.objects.none()
+        return Thread.objects.filter(league=League.objects.get(id=league_id)).order_by("-updated_at")
 
 
 class InvitationAPI(generics.ListCreateAPIView):
@@ -104,7 +108,7 @@ class ListPicks(generics.ListAPIView):
         if username:
             filters['user__username'] = username
         # else:
-            #filters['week__lt'] = week
+            # filters['week__lt'] = week
         filters['league__league__id'] = league_id
         filters['year'] = year
         return Pick.objects.filter(**filters)
@@ -146,15 +150,85 @@ class UpdatePicks(generics.RetrieveUpdateAPIView):
         return Response(status=200)
 
 
-class CreateLeagueAPI(generics.CreateAPIView):
-    """
-        Creates a league and adds the creator to the admin list
-    """
-    serializer_class = CreateLeagueSerializer
-    permission_classes = [permissions.AllowAny]
+class PickViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    pk_url_kwarg = 'id'
+    serializer_class = PickSerializer
+
+    def get_queryset(self):
+        return Pick.objects.filter(user=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        pick = Pick.objects.get(id=self.kwargs['id'])
+        new_picks = request.data
+        pick.qb = new_picks['qb']['name']
+        pick.qb_id = new_picks['qb']['id']
+        pick.rb = new_picks['rb']['name']
+        pick.rb_id = new_picks['rb']['id']
+        pick.wr = new_picks['wr']['name']
+        pick.wr_id = new_picks['wr']['id']
+        pick.te = new_picks['te']['name']
+        pick.te_id = new_picks['te']['id']
+        pick.defense = new_picks['defense']['name']
+        pick.defense_id = new_picks['defense']['id']
+        pick.save()
+        return Response(pick, status=200)
+
+    def destroy(self, request, pk=None):
+        response = {'message': 'Delete function is not offered in this path.'}
+        return Response(response, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+class PlayerViewSet(viewsets.ModelViewSet):
+    serializer_class = PlayerDetailSerializer
+    pk_url_kwarg = 'id'
+
+    def get_queryset(self):
+        name = self.request.query_params.get("search", "")
+        if not name:
+            return Player.objects.none()
+        queryset = Player.objects.filter(name__contains=name)
+        return queryset
+
+    def get_object(self, *args, **kwargs):
+        id = self.kwargs.get('pk', 0)
+        if not id:
+            return Player.objects.none()
+        player = Player.objects.get(id=id)
+        return player
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = PlayerDetailSerializer(instance)
+        return Response(serializer.data)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        page = self.paginate_queryset(queryset)
+        serializer = PlayerSerializer(page, many=True)
+        return Response(serializer.data)
+
+    def update(self, request, pk=None):
+        response = {'message': 'Update function is not offered in this path.'}
+        return Response(response, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def partial_update(self, request, pk=None):
+        response = {'message': 'Update function is not offered in this path.'}
+        return Response(response, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def destroy(self, request, pk=None):
+        response = {'message': 'Delete function is not offered in this path.'}
+        return Response(response, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+class LeagueViewSet(viewsets.ModelViewSet):
+    serializer_class = LeagueSerializer
+    queryset = League.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    pk_url_kwarg = 'id'
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = CreateLeagueSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         league = serializer.save()
         league_year = LeagueYear()                      # Create a LeagueYear object
@@ -175,15 +249,22 @@ class CreateLeagueAPI(generics.CreateAPIView):
             'leagues': LeagueSerializer(league, context=self.get_serializer_context()).data
         })
 
+    def retrieve(self, request, *args, **kwargs):
+        obj = self.get_object()
+        serializer = self.get_serializer(obj)
+        return Response(serializer.data)
 
-class JoinLeagueAPI(generics.UpdateAPIView):
-    serializer_class = LeagueAdminSerializer
-    queryset = League.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
+    def list(self, request, *args, **kwargs):
+        if request.user:
+            queryset = self.get_queryset()
+            queryset = queryset.filter(users=request.user)
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
+        return League.objects.none()
 
     def update(self, request, *args, **kwargs):
         league = League.objects.get(name=request.data['name'])
-        user = User.objects.get(id=request.data['user_id'])
+        user = request.user
         if check_password(request.data['password'], league.password):
             league.users.add(user)
             year = datetime.datetime.now().year
@@ -194,57 +275,7 @@ class JoinLeagueAPI(generics.UpdateAPIView):
                 'leagues': LeagueSerializer(league, context=self.get_serializer_context()).data
             })
         else:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-
-class ListLeagueAPI(generics.ListAPIView):
-    serializer_class = LeagueSerializer
-
-    def get_queryset(self):
-        if self.request.user:
-            return self.request.user.leagues.all()
-        return League.objects.none()
-
-
-class RetrieveLeagueAPI(generics.RetrieveAPIView):
-    serializer_class = LeagueSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        id = self.kwargs['pk']
-        return League.objects.filter(id=id)
-
-
-class RetrievePlayerAPI(generics.RetrieveAPIView):
-    serializer_class = PlayerSerializer
-
-    def get_object(self):
-        return Player.objects.all()[0]
-    """
-    def get_queryset(self):
-
-        nfl_id = self.kwargs.get('nfl_id', '')
-        if nfl_id:
-            return Player.objects.get(nfl_id=nfl_id)
-        return Player.objects.all()
-    """
-
-
-class ListPlayerAPI(generics.ListAPIView):
-    serializer_class = PlayerSerializer
-
-    def get_queryset(self):
-        return Player.objects.all()
-
-
-class ListPlayerWeekAPI(generics.ListAPIView):
-    serializer_class = PlayerWeekSerializer
-
-    def get_queryset(self):
-        nfl_id = self.kwargs.get('nfl_id', '')
-        if nfl_id:
-            return Player.objects.get(id=nfl_id).week.all()
-        return PlayerWeek.objects.none()
+            return Response({'message': 'Password does not match'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['GET'])

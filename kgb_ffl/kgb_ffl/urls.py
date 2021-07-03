@@ -17,7 +17,6 @@ from django.contrib import admin
 from django.conf.urls import handler404, url
 from django.urls import path, include
 from rest_framework import routers
-from ffl.api import CreateLeagueAPI
 from ffl import views
 
 
