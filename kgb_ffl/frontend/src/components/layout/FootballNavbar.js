@@ -58,7 +58,6 @@ export const FootballNavbar = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!playerName) return;
-    dispatch(getPlayers({ search: playerName }));
     return history.replace(`/search?search=${playerName}`);
   };
 

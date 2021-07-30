@@ -115,7 +115,7 @@ export const retrieveLeagues = () => async (dispatch, getState) => {
   dispatch({ type: LEAGUE_LOADING });
 
   try {
-    const response = await axios.get("/api/league/retrieve", tokenConfig(getState));
+    const response = await axios.get("/api/leagues", tokenConfig(getState));
     dispatch({
       type: LEAGUE_RETRIEVE_SUCCESS,
       payload: response.data,

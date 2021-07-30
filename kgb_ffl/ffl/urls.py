@@ -3,10 +3,10 @@ from rest_framework.routers import DefaultRouter
 from .api import *
 
 router = DefaultRouter()
-router.register(r'api/players', PlayerViewSet, basename='player')
-router.register(r'api/leagues', LeagueViewSet, basename="league")
+router.register(r'api/players', PlayerViewSet, basename='players')
 router.register(r'api/leagues', LeagueViewSet, basename="leagues")
-router.register(r'api/picks', PickViewSet, basename="pick")
+router.register(r'api/picks', PickViewSet, basename="picks")
+router.register(r'api/threads', ThreadViewSet, basename='threads')
 
 
 urlpatterns = [
@@ -16,8 +16,6 @@ urlpatterns = [
     path('api/current_week', get_current_week),
     path('api/current_year', get_current_year),
     path('api/invitations', InvitationAPI.as_view()),
-    path('api/forum', ThreadAPI.as_view()),
-    path('api/forum/<int:pk>', ThreadDetailAPI.as_view())
 ]
 
 urlpatterns += router.urls

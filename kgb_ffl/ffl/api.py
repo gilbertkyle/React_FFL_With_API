@@ -1,39 +1,15 @@
-from django.conf import settings
-from django.db.models import query
-from rest_framework import serializers, status, viewsets
+from rest_framework import status, viewsets
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import get_user_model
 import datetime
 from rest_framework.decorators import api_view
-from .models import Invitation, League, LeagueYear, Pick, Player, PlayerWeek, Thread
-from .serializers import CreateLeagueSerializer, InvitationSerializer, LeagueSerializer, LeagueAdminSerializer, PickSerializer, PlayerSerializer, PlayerWeekSerializer, UserSerializer, JoinLeagueSerializer, UpdatePickSerializer, ThreadSerializer, CommentSerializer, PlayerDetailSerializer
-from rest_framework.views import APIView
+from .models import Invitation, League, LeagueYear, Pick, Player, Thread
+from .serializers import CreateLeagueSerializer, InvitationSerializer, LeagueSerializer, PickSerializer, PlayerSerializer, UserSerializer, UpdatePickSerializer, ThreadSerializer, PlayerDetailSerializer
 from rest_framework.response import Response
 from rest_framework import generics, permissions
 from .ffl_settings import *
-from knox.auth import TokenAuthentication
-from django.shortcuts import get_object_or_404
 
 User = get_user_model()
-
-
-class ThreadDetailAPI(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = ThreadSerializer
-    lookup_field = 'id'
-    permission_classes = [
-        permissions.IsAuthenticated
-    ]
-
-
-class ThreadAPI(generics.ListCreateAPIView):
-    serializer_class = ThreadSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        league_id = self.request.query_params.get("league_id", 0)
-        if not league_id:
-            return Thread.objects.none()
-        return Thread.objects.filter(league=League.objects.get(id=league_id)).order_by("-updated_at")
 
 
 class InvitationAPI(generics.ListCreateAPIView):
@@ -87,67 +63,16 @@ class ListCommishLeaguesAPI(generics.ListAPIView):
         return League.objects.filter(admins=self.request.user)
 
 
-class ListPicks(generics.ListAPIView):
-    """
-    Returns all picks for a particular user, league and year
-    """
-    serializer_class = PickSerializer
+class ThreadViewSet(viewsets.ModelViewSet):
+    serializer_class = ThreadSerializer
     permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        """
-        If no username is provided in query, returns all picks before that week for league specified
-        if username is sent, returns all picks
-        week and leagueId are required
-        """
-        filters = {}
-        week = self.request.query_params.get('current_week', 0)
-        username = self.request.user.username
-        league_id = self.request.query_params.get('leagueId', 0)
-        year = CURRENT_YEAR
-        if username:
-            filters['user__username'] = username
-        # else:
-            # filters['week__lt'] = week
-        filters['league__league__id'] = league_id
-        filters['year'] = year
-        return Pick.objects.filter(**filters)
-
-
-class UpdatePicks(generics.RetrieveUpdateAPIView):
-    """
-        Retrieves or updates a single pick object
-        if updating, put pick info in body of request
-        if retrieving, put pick.pk in url
-
-        Tested and working as of 6/21
-    """
-    serializer_class = UpdatePickSerializer
     lookup_field = 'id'
-    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Pick.objects.all()
-
-    def update(self, request, *args, **kwargs):
-        pick = Pick.objects.get(id=self.kwargs['id'])
-        new_picks = request.data
-        pick.qb = new_picks['qb']['name']
-        pick.qb_id = new_picks['qb']['id']
-        pick.rb = new_picks['rb']['name']
-        pick.rb_id = new_picks['rb']['id']
-        pick.wr = new_picks['wr']['name']
-        pick.wr_id = new_picks['wr']['id']
-        pick.te = new_picks['te']['name']
-        pick.te_id = new_picks['te']['id']
-        pick.defense = new_picks['defense']['name']
-        pick.defense_id = new_picks['defense']['id']
-        pick.save()
-        return Response(status=200)
-
-    def partial_update(self, request, *args, **kwargs):
-        print("Partial Update?")
-        return Response(status=200)
+        league_id = self.request.query_params.get("league_id", 0)
+        if not league_id:
+            return Thread.objects.none()
+        return Thread.objects.filter(league=League.objects.get(id=league_id)).order_by("-updated_at")
 
 
 class PickViewSet(viewsets.ModelViewSet):
@@ -158,6 +83,18 @@ class PickViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return Pick.objects.filter(user=self.request.user)
 
+    def list(self, request, *args, **kwargs):
+        qs = self.get_queryset()
+        filters = {}
+        week = self.request.query_params.get('current_week', 0)
+        league_id = self.request.query_params.get('leagueId', 0)
+        filters['user__username'] = self.request.user.username
+        filters['league__league__id'] = league_id
+        filters['year'] = CURRENT_YEAR
+        qs.filter(**filters)
+        serializer = self.get_serializer(qs, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     def update(self, request, *args, **kwargs):
         pick = Pick.objects.get(id=self.kwargs['id'])
         new_picks = request.data
@@ -172,7 +109,7 @@ class PickViewSet(viewsets.ModelViewSet):
         pick.defense = new_picks['defense']['name']
         pick.defense_id = new_picks['defense']['id']
         pick.save()
-        return Response(pick, status=200)
+        return Response(pick, status=status.HTTP_200_OK)
 
     def destroy(self, request, pk=None):
         response = {'message': 'Delete function is not offered in this path.'}

@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 import datetime
-from django.db.models import constraints
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -27,7 +26,7 @@ class Comment(models.Model):
 
     def save(self, *args, **kwargs):
         """
-            Updates the 
+            Updates the thread time when a comment is posted
         """
         self.thread.update(updated_at=datetime.datetime.now())
         super(Comment, self).save(*args, **kwargs)

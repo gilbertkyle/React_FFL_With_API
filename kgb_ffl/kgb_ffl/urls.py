@@ -17,19 +17,10 @@ from django.contrib import admin
 from django.conf.urls import handler404, url
 from django.urls import path, include
 from rest_framework import routers
-from ffl import views
-
-
-router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'leagues', views.LeagueViewSet)
-router.register(r'players', views.PlayerViewSet)
-router.register(r'defenses', views.DefenseViewSet)
 
 
 urlpatterns = [
     path('', include('frontend.urls')),
-    path('api/', include(router.urls)),
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
     path('', include('ffl.urls')),
