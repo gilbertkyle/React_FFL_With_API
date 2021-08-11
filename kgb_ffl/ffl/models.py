@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 import datetime
+from django.db.models import constraints
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -43,6 +44,7 @@ class Invitation(models.Model):
 
     def complete(self):
         self.league.add_user(self.receiver)
+        self.league.save()
 
     class Meta:
         # prevents commissioners from inviting the same user more than once
@@ -50,6 +52,9 @@ class Invitation(models.Model):
             models.UniqueConstraint(
                 fields=['receiver', 'league'], name="unique_league_invite")
         ]
+
+    def __str__(self) -> str:
+        return f"{self.receiver.username}, {self.league.name}"
 
 
 class LeagueProfile(models.Model):
@@ -80,6 +85,8 @@ class League(models.Model):
         return self.name
 
     def add_user(self, user):
+        if user in self.users.all():
+            return
         self.users.add(user)
         league_year = self.years.get(year=datetime.datetime.now().year)
         league_year.create_picks(user)
@@ -102,6 +109,13 @@ class LeagueYear(models.Model):
     league = models.ForeignKey(
         'League', related_name='years', on_delete=models.CASCADE)
     year = models.IntegerField(default=datetime.datetime.now().year)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['league', 'year'], name="unique_year"
+            )
+        ]
 
     def __str__(self):
         return f"{self.league.name}, Year: {self.year}"

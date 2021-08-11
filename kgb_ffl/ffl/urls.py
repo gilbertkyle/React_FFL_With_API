@@ -7,6 +7,7 @@ router.register(r'api/players', PlayerViewSet, basename='players')
 router.register(r'api/leagues', LeagueViewSet, basename="leagues")
 router.register(r'api/picks', PickViewSet, basename="picks")
 router.register(r'api/threads', ThreadViewSet, basename='threads')
+router.register(r'api/invitations', InvitationViewSet, basename="invitations")
 
 
 urlpatterns = [
@@ -15,7 +16,6 @@ urlpatterns = [
     path('api/admin/picks', AdminRetrievePicksAPI.as_view()),
     path('api/current_week', get_current_week),
     path('api/current_year', get_current_year),
-    path('api/invitations', InvitationAPI.as_view()),
 ]
 
 urlpatterns += router.urls

@@ -1,4 +1,4 @@
-from rest_framework import status, viewsets
+from rest_framework import serializers, status, viewsets
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import get_user_model
 import datetime
@@ -10,16 +10,6 @@ from rest_framework import generics, permissions
 from .ffl_settings import *
 
 User = get_user_model()
-
-
-class InvitationAPI(generics.ListCreateAPIView):
-    serializer_class = InvitationSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        options = {}
-        options["receiver"] = self.request.user
-        return Invitation.objects.filter(**options)
 
 
 class AdminRetrievePicksAPI(generics.ListAPIView):
@@ -61,6 +51,27 @@ class ListCommishLeaguesAPI(generics.ListAPIView):
     def get_queryset(self):
         # returns all of the leagues that have the user as a commissioner
         return League.objects.filter(admins=self.request.user)
+
+
+class InvitationViewSet(viewsets.ModelViewSet):
+    serializer_class = InvitationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    paginator = None
+
+    def get_queryset(self):
+        options = {}
+        options["receiver"] = self.request.user
+        return Invitation.objects.filter(**options)
+
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        if not pk:
+            return
+        invite = Invitation.objects.get(pk=pk)
+        if invite.receiver != request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        invite.complete()
+        serializer = self.get_serializer(invite)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ThreadViewSet(viewsets.ModelViewSet):
