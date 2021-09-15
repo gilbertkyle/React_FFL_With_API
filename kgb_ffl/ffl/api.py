@@ -92,7 +92,7 @@ class PickViewSet(viewsets.ModelViewSet):
     serializer_class = PickSerializer
 
     def get_queryset(self):
-        return Pick.objects.filter(user=self.request.user)
+        return Pick.objects.filter(user=self.request.user, league__year=CURRENT_YEAR)
 
     def list(self, request, *args, **kwargs):
         qs = self.get_queryset()
