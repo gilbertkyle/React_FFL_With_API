@@ -1,12 +1,14 @@
 branch-defaults:
   master:
-    environment: null
+    environment: FFL-API-WITH-REACT-dev
     group_suffix: null
 global:
   application_name: FFL_API_WITH_REACT
   branch: null
+  default_ec2_keyname: aws-eb
   default_platform: Python 3.8 running on 64bit Amazon Linux 2
   default_region: us-west-1
+  include_git_submodules: true
   instance_profile: null
   platform_name: null
   platform_version: null
