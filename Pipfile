@@ -13,7 +13,7 @@ django-rest-knox = "*"
 nflgame-redux = "==2.0.1b1"
 requests = "*"
 pandas = "*"
-nfldfs = "*"
+nfldfs = {git = "https://github.com/gilbertkyle/nfldfs.git"}
 django-dotenv = "*"
 python-dotenv = "*"
 django-rest-passwordreset = "*"
