@@ -159,6 +159,7 @@ STATIC_ROOT = "/home/citizenpain/kgb_ffl/kgb_ffl/frontend/static"
 STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+SITE_ID = 1
 
 # My Variables
 
