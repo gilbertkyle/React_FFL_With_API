@@ -1,3 +1,4 @@
+from kgb_ffl.kgb_ffl.settings.base import SITE_ID
 import os
 
 USERNAME = os.getenv('USERNAME')
@@ -14,3 +15,4 @@ DATABASES = {
         'HOST': f'{MYSQL_HOSTNAME}',
     }
 }
+SITE_ID = 1
