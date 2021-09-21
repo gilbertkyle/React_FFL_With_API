@@ -8,9 +8,9 @@ from pytz import timezone
 TIME_ZONE = timezone("US/Pacific")
 BASE_DATE = datetime.datetime(2020, 8, 30, 10, 0, 0, tzinfo=TIME_ZONE)
 
-NUMBER_OF_WEEKS = 17
+NUMBER_OF_WEEKS = 18
 
-CURRENT_YEAR = 2020
+CURRENT_YEAR = 2021
 
 
 def get_week():

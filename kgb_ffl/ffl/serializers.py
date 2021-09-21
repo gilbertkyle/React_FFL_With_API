@@ -1,7 +1,9 @@
 from rest_framework import serializers
+import rest_framework
 from .models import Comment, Invitation, Thread, User, Player, League, Defense, Pick, PlayerWeek
 from django.contrib.auth.hashers import make_password
 from django.conf import settings
+from rest_framework.fields import CurrentUserDefault
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -141,11 +143,10 @@ class LeagueAdminSerializer(serializers.Serializer):
 
 
 class CreateLeagueSerializer(serializers.ModelSerializer):
-    user_id = serializers.IntegerField()
 
     class Meta:
         model = League
-        fields = ['name', 'password', 'is_private', 'user_id']
+        fields = ['name', 'password', 'is_private']
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -157,10 +158,6 @@ class CreateLeagueSerializer(serializers.ModelSerializer):
             password=hashed_password,
             is_private=validated_data.get('is_private', False)
         )
-        user = User.objects.get(pk=validated_data['user_id'])
-        league.admins.add(user)
-        user.is_commissioner = True
-        user.save()
         league.save()
         return league
 

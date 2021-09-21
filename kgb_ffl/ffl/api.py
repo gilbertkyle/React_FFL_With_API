@@ -173,7 +173,7 @@ class LeagueViewSet(viewsets.ModelViewSet):
     serializer_class = LeagueSerializer
     queryset = League.objects.all()
     permission_classes = [permissions.IsAuthenticated]
-    pk_url_kwarg = 'id'
+    #pk_url_kwarg = 'id'
 
     def create(self, request, *args, **kwargs):
         serializer = CreateLeagueSerializer(data=request.data)

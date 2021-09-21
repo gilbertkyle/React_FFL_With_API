@@ -21,7 +21,7 @@ import {
 import { returnErrors } from "./messages";
 import { tokenConfig } from "./auth";
 
-export const deleteInvitation = (id) => async (dispatch, getState) => {
+export const deleteInvitation = id => async (dispatch, getState) => {
   try {
     const response = await axios.delete(`/api/invitations/${id}`, tokenConfig(getState));
     dispatch({
@@ -33,7 +33,7 @@ export const deleteInvitation = (id) => async (dispatch, getState) => {
   }
 };
 
-export const acceptInvitation = (id) => async (dispatch, getState) => {
+export const acceptInvitation = id => async (dispatch, getState) => {
   try {
     const response = axios.post(`/api/invitations/${id}`, tokenConfig(getState));
     dispatch({
@@ -126,10 +126,10 @@ export const retrieveLeagues = () => async (dispatch, getState) => {
 };
 
 export const registerLeague =
-  ({ name, password, user_id, is_private }) =>
+  ({ name, password, user_id }) =>
   async (dispatch, getState) => {
     // Request Body
-    const body = JSON.stringify({ name, password, user_id, is_private });
+    const body = JSON.stringify({ name, password, user_id });
 
     try {
       const response = await axios.post("/api/league/register", body, tokenConfig(getState));
@@ -138,7 +138,7 @@ export const registerLeague =
         payload: res.data,
       });
     } catch (error) {
-      dispatch(returnErrors(err.response.data, err.response.status));
+      dispatch(returnErrors(error.response.data, error.response.status));
     }
   };
 
@@ -156,7 +156,7 @@ export const joinLeague = (name, password, user_id) => async (dispatch, getState
   }
 };
 
-export const getCurrentWeek = () => async (dispatch) => {
+export const getCurrentWeek = () => async dispatch => {
   try {
     const response = await axios.get("/api/current_week");
     dispatch({
@@ -168,7 +168,7 @@ export const getCurrentWeek = () => async (dispatch) => {
   }
 };
 
-export const getCurrentYear = () => async (dispatch) => {
+export const getCurrentYear = () => async dispatch => {
   try {
     const response = await axios.get("/api/current_year");
     dispatch({

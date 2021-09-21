@@ -4,6 +4,7 @@ import datetime
 from django.db.models import constraints
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from .ffl_settings import CURRENT_YEAR, NUMBER_OF_WEEKS
 
 from django.db.models.fields import related
 User = get_user_model()
@@ -110,19 +111,12 @@ class LeagueYear(models.Model):
         'League', related_name='years', on_delete=models.CASCADE)
     year = models.IntegerField(default=datetime.datetime.now().year)
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['league', 'year'], name="unique_year"
-            )
-        ]
-
     def __str__(self):
         return f"{self.league.name}, Year: {self.year}"
 
     def create_picks(self, user):
 
-        for i in range(1, 18):
+        for i in range(2, NUMBER_OF_WEEKS):
             pick = Pick.objects.create()
             pick.week = i
             pick.user = user
