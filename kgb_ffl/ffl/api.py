@@ -92,7 +92,7 @@ class PickViewSet(viewsets.ModelViewSet):
     serializer_class = PickSerializer
 
     def get_queryset(self):
-        return Pick.objects.filter(user=self.request.user, league__year=CURRENT_YEAR)
+        return Pick.objects.filter(user=self.request.user)
 
     def list(self, request, *args, **kwargs):
         qs = self.get_queryset()
@@ -242,10 +242,8 @@ def get_current_week(request):
 
 @api_view(['GET'])
 def get_current_year(request):
-
-    current_year = CURRENT_YEAR
     return Response({
-        "current_year": current_year
+        "current_year": CURRENT_YEAR
     })
 
 
