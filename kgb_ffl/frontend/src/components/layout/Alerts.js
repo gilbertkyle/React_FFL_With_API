@@ -10,6 +10,7 @@ const Alert = () => {
   const alert = useAlert();
 
   useEffect(() => {
+    console.log(error);
     if (error.msg.name) alert.error(`Name: ${error.msg.name.join()}`);
     if (error.msg.email) alert.error(`Email: ${error.msg.email.join()}`);
     if (error.msg.password) alert.error(`Password: ${error.msg.password.join()}`);

@@ -211,6 +211,7 @@ class LeagueViewSet(viewsets.ModelViewSet):
         return League.objects.none()
 
     def update(self, request, *args, **kwargs):
+        print("hello")
         league = League.objects.get(name=request.data['name'])
         user = request.user
         if check_password(request.data['password'], league.password):

@@ -146,7 +146,7 @@ export const joinLeague = (name, password) => async (dispatch, getState) => {
   const body = JSON.stringify({ name, password });
 
   try {
-    const response = await axios.put("/api/leagues/", body, tokenConfig(getState));
+    const response = await axios.put(`/api/leagues/${name}/`, body, tokenConfig(getState));
     dispatch({
       type: LEAGUE_JOIN_SUCCESS,
       payload: response.data,

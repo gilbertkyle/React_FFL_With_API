@@ -22,7 +22,11 @@ const JoinLeague = props => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    dispatch(joinLeague(name, password, user.id));
+    dispatch(joinLeague(name, password));
+    console.log({
+      name,
+      password,
+    });
   };
 
   useEffect(() => {
@@ -38,7 +42,7 @@ const JoinLeague = props => {
           className="form-control"
           id="leagueNameInput"
           aria-describedby="emailHelp"
-          onChange={(e, value) => setName(value)}
+          onChange={e => setName(e.target.value)}
           name="name"
           value={name}
         />
@@ -50,7 +54,7 @@ const JoinLeague = props => {
           className="form-control"
           id="leaguePassword"
           name="password"
-          onChange={(e, value) => setPassword(value)}
+          onChange={e => setPassword(e.target.value)}
           value={password}
         />
       </div>
