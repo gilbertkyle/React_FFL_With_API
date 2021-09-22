@@ -6,7 +6,7 @@ import { registerLeague } from "../../actions/ffl";
 import { TextField, Button, Checkbox, FormControlLabel } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   header: {
     paddingTop: "1rem",
   },
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CreateLeague = (props) => {
+const CreateLeague = props => {
   // set local state variables
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -30,8 +30,8 @@ const CreateLeague = (props) => {
   const [isPrivate, setIsPrivate] = useState(false);
 
   // get state variables
-  const { user, isAuthenticated } = useSelector((state) => state.auth);
-  const { leaguesUpdated } = useSelector((state) => state.ffl);
+  const { user, isAuthenticated } = useSelector(state => state.auth);
+  const { leaguesUpdated } = useSelector(state => state.ffl);
 
   // get dispatch
   const dispatch = useDispatch();
@@ -40,7 +40,7 @@ const CreateLeague = (props) => {
   const classes = useStyles();
 
   // form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     if (!name || !password) return;
     if (password !== password2) {
       dispatch(createMessage({ passwordNotMatch: "Passwords do not match" }));
@@ -49,13 +49,11 @@ const CreateLeague = (props) => {
     const newLeague = {
       name: name,
       password: password,
-      user_id: user.id,
-      is_private: isPrivate,
     };
     dispatch(registerLeague(newLeague));
   };
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     setIsPrivate(e.target.checked);
   };
 
@@ -68,7 +66,7 @@ const CreateLeague = (props) => {
           label="League Name"
           variant="outlined"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={e => setName(e.target.value)}
         />
       </div>
       <div>
@@ -77,7 +75,7 @@ const CreateLeague = (props) => {
           label="Password"
           variant="outlined"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={e => setPassword(e.target.value)}
           type="password"
         />
         <div>
@@ -86,7 +84,7 @@ const CreateLeague = (props) => {
             label="Confirm Password"
             variant="outlined"
             value={password2}
-            onChange={(e) => setPassword2(e.target.value)}
+            onChange={e => setPassword2(e.target.value)}
             type="password"
           />
         </div>
