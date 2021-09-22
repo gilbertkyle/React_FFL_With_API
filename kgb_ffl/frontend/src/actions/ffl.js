@@ -132,7 +132,7 @@ export const registerLeague =
     const body = JSON.stringify({ name, password, user_id });
 
     try {
-      const response = await axios.post("/api/league/register", body, tokenConfig(getState));
+      const response = await axios.post("/api/league/", body, tokenConfig(getState));
       dispatch({
         type: LEAGUE_CREATE_SUCCESS,
         payload: res.data,
@@ -146,13 +146,13 @@ export const joinLeague = (name, password, user_id) => async (dispatch, getState
   const body = JSON.stringify({ name, password, user_id });
 
   try {
-    const response = await axios.put("/api/league/join", body, tokenConfig(getState));
+    const response = await axios.put("/api/league/", body, tokenConfig(getState));
     dispatch({
       type: LEAGUE_JOIN_SUCCESS,
       payload: response.data,
     });
   } catch (error) {
-    dispatch(returnErrors(err.response.data, err.response.status));
+    dispatch(returnErrors(error.response.data, error.response.status));
   }
 };
 
@@ -164,7 +164,7 @@ export const getCurrentWeek = () => async dispatch => {
       payload: response.data,
     });
   } catch (error) {
-    dispatch(returnErrors(err.response.data, err.response.status));
+    dispatch(returnErrors(error.response.data, error.response.status));
   }
 };
 
