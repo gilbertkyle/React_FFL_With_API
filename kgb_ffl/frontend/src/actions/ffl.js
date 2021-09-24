@@ -59,7 +59,7 @@ export const loadInvitations = () => async (dispatch, getState) => {
 
 export const retrieveCommishLeagues = () => async (dispatch, getState) => {
   try {
-    const response = await axios.get("/api/league/admin");
+    const response = await axios.get("/api/league/admin", tokenConfig(getState));
     dispatch({
       type: LEAGUE_COMMISH_RETRIEVE_SUCCESS,
       payload: response.data,
@@ -137,7 +137,7 @@ export const registerLeague =
       const response = await axios.post("/api/leagues/", body, tokenConfig(getState));
       dispatch({
         type: LEAGUE_CREATE_SUCCESS,
-        payload: res.data,
+        payload: response.data,
       });
     } catch (error) {
       dispatch(returnErrors(error.response.data, error.response.status));

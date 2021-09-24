@@ -1,6 +1,4 @@
-import React, { Component, useEffect } from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import React, { useEffect } from "react";
 import { retrieveCommishLeagues } from "../../actions/ffl";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 const AdminIndex = () => {
   const dispatch = useDispatch();
   const commishLeagues = useSelector(state => state.admin.commishLeagues);
+  console.log(commishLeagues);
 
   useEffect(() => {
     dispatch(retrieveCommishLeagues());

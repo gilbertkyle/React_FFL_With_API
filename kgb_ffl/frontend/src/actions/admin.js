@@ -3,18 +3,15 @@ import axios from "axios";
 import { tokenConfig } from "./auth";
 
 export const getUsersInLeague = league => dispatch => {
-  const queryParams = {
-    params: {
-      league: league
-    }
-  };
+  const config = tokenConfig(getState);
+  config["params"] = { league };
 
   axios
-    .get("api/users", queryParams)
+    .get("api/users", config)
     .then(response => {
       dispatch({
         type: RETRIEVE_LEAGUE_USERS,
-        payload: response.data
+        payload: response.data,
       });
     })
     .catch(error => {
@@ -25,16 +22,14 @@ export const getUsersInLeague = league => dispatch => {
 export const getPicksAdmin = (league, username) => (dispatch, getState) => {
   const config = tokenConfig(getState);
 
-  config["params"] = {};
-  config.params["league"] = league;
-  config.params["username"] = username;
+  config["params"] = { league, username };
 
   axios
     .get("api/admin/picks", config)
     .then(response => {
       dispatch({
         type: RETRIEVE_PICKS_ADMIN,
-        payload: response.data
+        payload: response.data,
       });
     })
     .catch(error => {

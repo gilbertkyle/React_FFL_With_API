@@ -150,7 +150,6 @@ class PlayerViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        #page = self.paginate_queryset(queryset)
         serializer = PlayerSerializer(queryset, many=True)
         return Response(serializer.data)
 
