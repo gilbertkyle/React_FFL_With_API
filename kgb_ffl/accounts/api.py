@@ -1,4 +1,5 @@
 from rest_framework import permissions, generics
+import rest_framework
 from rest_framework.response import Response
 from knox.models import AuthToken
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer
@@ -65,6 +66,7 @@ def post_password_reset(sender, user, *args, **kwargs):
 # Register API
 class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterSerializer
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

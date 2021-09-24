@@ -9,7 +9,7 @@ import {
   REGISTER_FAIL,
   PASSWORD_RECOVERY_SENT,
   EMAIL_RECOVERY_SENT,
-  PASSWORD_CHANGE_SUCCESS
+  PASSWORD_CHANGE_SUCCESS,
 } from "../actions/types";
 
 const initialState = {
@@ -19,15 +19,15 @@ const initialState = {
   isLoading: false,
   user: null,
   passwordRecoverySent: false,
-  passwordChangeSuccess: false
+  passwordChangeSuccess: false,
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
     case USER_LOADING:
       return {
         ...state,
-        isLoading: true
+        isLoading: true,
       };
     case USER_LOADED:
       return {
@@ -35,7 +35,7 @@ export default function(state = initialState, action) {
         isAuthenticated: true,
         isLoading: false,
         isCommissioner: action.payload.is_commissioner,
-        user: action.payload
+        user: action.payload,
       };
     case LOGIN_SUCCESS:
     case REGISTER_SUCCESS:
@@ -45,7 +45,7 @@ export default function(state = initialState, action) {
         ...action.payload,
         isAuthenticated: true,
         isLoading: false,
-        isCommissioner: action.payload.user.is_commissioner
+        isCommissioner: action.payload.user.is_commissioner,
       };
     case AUTH_ERROR:
     case LOGIN_FAIL:
@@ -58,22 +58,22 @@ export default function(state = initialState, action) {
         user: null,
         isAuthenticated: false,
         isLoading: false,
-        isCommissioner: false
+        isCommissioner: false,
       };
     case PASSWORD_RECOVERY_SENT:
       return {
         ...state,
-        passwordRecoverySent: true
+        passwordRecoverySent: true,
       };
     case EMAIL_RECOVERY_SENT:
       return {
         ...state,
-        passwordRecoverySent: false
+        passwordRecoverySent: false,
       };
     case PASSWORD_CHANGE_SUCCESS:
       return {
         ...state,
-        passwordChangeSuccess: true
+        passwordChangeSuccess: true,
       };
     default:
       return state;

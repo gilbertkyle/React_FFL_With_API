@@ -79,29 +79,31 @@ export const updatePick = (pickId, picks) => async (dispatch, getState) => {
       payload: response.data,
     });
   } catch (error) {
-    dispatch(returnErrors(err.response.data, err.response.status));
+    dispatch(returnErrors(error.response.data, error.response.status));
   }
 };
 
 export const retrievePicks = (leagueId, current_week) => async (dispatch, getState) => {
-  const params = { leagueId, current_week };
+  const config = tokenConfig(getState);
+  config["params"] = { leagueId, current_week };
 
   try {
-    const response = await axios.get("/api/picks", { params }, tokenConfig(getState));
+    const response = await axios.get("/api/picks", config);
     dispatch({
       type: PICK_RETRIEVE_SUCCESS,
       payload: response.data,
     });
   } catch (error) {
-    dispatch(returnErrors(err.response.data, err.response.status));
+    dispatch(returnErrors(error.response.data, error.response.status));
   }
 };
 
 export const retrieveMyPicks = (leagueId, username) => async (dispatch, getState) => {
-  const params = { leagueId, username };
+  const config = tokenConfig(getState);
+  config["params"] = { leagueId, username };
 
   try {
-    const response = await axios.get("/api/picks", { params }, tokenConfig(getState));
+    const response = await axios.get("/api/picks", config);
     dispatch({
       type: USER_PICK_RETRIEVE_SUCCESS,
       payload: response.data,

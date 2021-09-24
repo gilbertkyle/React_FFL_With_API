@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "b988b34dde5124dd540d4a1588fa81872e49391458a4924937ab561a2cd0540a"
+            "sha256": "cb206aace6efe74397b285ceda6161bd13fc30df383897f1bd562ac0ef8be6b1"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -214,12 +214,12 @@
             "version": "==4.5.0"
         },
         "nfldfs": {
-            "git": "https://github.com/gilbertkyle/nfldfs.git",
+            "git": "https://github.com/gilbertkyle/nfldfs",
             "hashes": [
                 "sha256:10414d9bc324a0cc8ce097e3bd79f31f5a75b77079ae2e6b0db3a8211e90d878",
                 "sha256:14a8e3b4392aa32fe0e81729c03fafd68bdb5897bee0a038a2480cc7d06550f2"
             ],
-            "ref": "c090a470951bf1a1cd61518950a518e0d5f89e3d"
+            "ref": "0c121aae18a6549b998771eb8202a62fb812deb6"
         },
         "nflgame-redux": {
             "hashes": [

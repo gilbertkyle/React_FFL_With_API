@@ -27,11 +27,13 @@ const Home = props => {
   });
 
   useEffect(() => {
+    /*
     const getLeague = async () => {
       const response = await axios.get(`/api/league/retrieve/${id}`);
       setName(response.data.name);
     };
     getLeague();
+    */
     dispatch(retrievePicks(id, week));
     dispatch(retrieveMyPicks(id, user.username));
   }, []);

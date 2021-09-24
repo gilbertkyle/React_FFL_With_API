@@ -6,7 +6,7 @@ import datetime
 from pytz import timezone
 
 TIME_ZONE = timezone("US/Pacific")
-BASE_DATE = datetime.datetime(2020, 8, 30, 10, 0, 0, tzinfo=TIME_ZONE)
+BASE_DATE = datetime.datetime(2021, 8, 30, 10, 0, 0, tzinfo=TIME_ZONE)
 
 NUMBER_OF_WEEKS = 18
 

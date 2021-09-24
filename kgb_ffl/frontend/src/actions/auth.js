@@ -15,7 +15,7 @@ import {
   LOAD_INVITATIONS,
 } from "./types";
 
-export const changePassword = (password, token) => async (dispatch) => {
+export const changePassword = (password, token) => async dispatch => {
   const body = JSON.stringify({ password, token });
   const config = {
     headers: {
@@ -30,7 +30,7 @@ export const changePassword = (password, token) => async (dispatch) => {
   }
 };
 
-export const resetPassword = (email) => async (dispatch) => {
+export const resetPassword = email => async dispatch => {
   const body = JSON.stringify({ email });
   const config = {
     headers: {
@@ -54,13 +54,13 @@ export const loadUser = () => (dispatch, getState) => {
 
   axios
     .get("/api/auth/user", tokenConfig(getState))
-    .then((res) => {
+    .then(res => {
       dispatch({
         type: USER_LOADED,
         payload: res.data,
       });
     })
-    .catch((err) => {
+    .catch(err => {
       dispatch(returnErrors(err.response.data, err.response.status));
       dispatch({
         type: AUTH_ERROR,
@@ -69,7 +69,7 @@ export const loadUser = () => (dispatch, getState) => {
 };
 
 // LOGIN USER
-export const login = (username, password) => (dispatch) => {
+export const login = (username, password) => dispatch => {
   // Headers
   const config = {
     headers: {
@@ -82,13 +82,13 @@ export const login = (username, password) => (dispatch) => {
 
   axios
     .post("/api/auth/login", body, config)
-    .then((res) => {
+    .then(res => {
       dispatch({
         type: LOGIN_SUCCESS,
         payload: res.data,
       });
     })
-    .catch((err) => {
+    .catch(err => {
       dispatch(returnErrors(err.response.data, err.response.status));
       dispatch({
         type: LOGIN_FAIL,
@@ -99,7 +99,7 @@ export const login = (username, password) => (dispatch) => {
 // REGISTER USER
 export const register =
   ({ username, password, email }) =>
-  (dispatch) => {
+  dispatch => {
     // Headers
     const config = {
       headers: {
@@ -112,13 +112,13 @@ export const register =
 
     axios
       .post("/api/auth/register", body, config)
-      .then((res) => {
+      .then(res => {
         dispatch({
           type: REGISTER_SUCCESS,
           payload: res.data,
         });
       })
-      .catch((err) => {
+      .catch(err => {
         dispatch(returnErrors(err.response.data, err.response.status));
         dispatch({
           type: REGISTER_FAIL,
@@ -130,18 +130,18 @@ export const register =
 export const logout = () => (dispatch, getState) => {
   axios
     .post("/api/auth/logout/", null, tokenConfig(getState))
-    .then((res) => {
+    .then(res => {
       dispatch({
         type: LOGOUT_SUCCESS,
       });
     })
-    .catch((err) => {
+    .catch(err => {
       dispatch(returnErrors(err.response.data, err.response.status));
     });
 };
 
 // Setup config with token - helper function
-export const tokenConfig = (getState) => {
+export const tokenConfig = getState => {
   // Get token from state
   const token = getState().auth.token;
 

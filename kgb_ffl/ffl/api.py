@@ -1,3 +1,4 @@
+from django.db.models import query
 from rest_framework import serializers, status, viewsets
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import get_user_model
@@ -8,6 +9,7 @@ from .serializers import CreateLeagueSerializer, InvitationSerializer, LeagueSer
 from rest_framework.response import Response
 from rest_framework import generics, permissions
 from .ffl_settings import *
+from knox.auth import TokenAuthentication
 
 User = get_user_model()
 
@@ -26,10 +28,7 @@ class AdminRetrievePicksAPI(generics.ListAPIView):
 class PlayerViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PlayerSerializer
     permission_classes = [permissions.AllowAny]
-
-    def get_queryset(self):
-        player = self.request.query_params.get("search", "")
-        return Player.objects.filter(name__contains=player)
+    queryset = Player.objects.all()
 
 
 class ListUsersAPI(generics.ListAPIView):
@@ -99,7 +98,7 @@ class PickViewSet(viewsets.ModelViewSet):
         filters = {}
         week = self.request.query_params.get('current_week', 0)
         league_id = self.request.query_params.get('leagueId', 0)
-        filters['user__username'] = self.request.user.username
+        filters['user__username'] = request.user.username
         filters['league__league__id'] = league_id
         filters['year'] = CURRENT_YEAR
         qs.filter(**filters)
@@ -128,15 +127,14 @@ class PickViewSet(viewsets.ModelViewSet):
 
 
 class PlayerViewSet(viewsets.ModelViewSet):
-    serializer_class = PlayerDetailSerializer
+    #serializer_class = PlayerDetailSerializer
     pk_url_kwarg = 'id'
+    queryset = Player.objects.all()
 
-    def get_queryset(self):
-        name = self.request.query_params.get("search", "")
-        if not name:
-            return Player.objects.none()
-        queryset = Player.objects.filter(name__contains=name)
-        return queryset
+    def get_serializer_class(self, *args, **kwargs):
+        if self.action == 'retrieve':
+            return PlayerDetailSerializer
+        return PlayerSerializer
 
     def get_object(self, *args, **kwargs):
         id = self.kwargs.get('pk', 0)
@@ -152,8 +150,8 @@ class PlayerViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        page = self.paginate_queryset(queryset)
-        serializer = PlayerSerializer(page, many=True)
+        #page = self.paginate_queryset(queryset)
+        serializer = PlayerSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def update(self, request, pk=None):
@@ -203,6 +201,7 @@ class LeagueViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def list(self, request, *args, **kwargs):
+        print(request.user)
         if request.user:
             queryset = self.get_queryset()
             queryset = queryset.filter(users=request.user)
@@ -211,7 +210,6 @@ class LeagueViewSet(viewsets.ModelViewSet):
         return League.objects.none()
 
     def update(self, request, *args, **kwargs):
-        print("hello")
         league = League.objects.get(name=request.data['name'])
         user = request.user
         if check_password(request.data['password'], league.password):

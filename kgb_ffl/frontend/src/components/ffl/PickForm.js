@@ -11,11 +11,11 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles(theme => ({
   formField: {
     margin: "1rem",
-    width: "300px"
+    width: "300px",
   },
   formButton: {
-    margin: "1rem"
-  }
+    margin: "1rem",
+  },
 }));
 
 const PickForm = ({ admin = false }) => {
@@ -81,7 +81,7 @@ const PickForm = ({ admin = false }) => {
       rb,
       wr,
       te,
-      defense
+      defense,
     };
     // check for repeat picks in this league
     if (!admin) {
@@ -104,7 +104,7 @@ const PickForm = ({ admin = false }) => {
         }
         if (myPicks[i].defense_id == defense.id) {
           createMessage({
-            defenseTaken: `You have already picked ${defense.name} this season`
+            defenseTaken: `You have already picked ${defense.name} this season`,
           });
           return;
         }
@@ -124,9 +124,7 @@ const PickForm = ({ admin = false }) => {
         onChange={(e, value) => setQb(value)}
         options={qbs}
         getOptionLabel={handleOptionLabel}
-        renderInput={params => (
-          <TextField {...params} label="Quarterback" variant="outlined" name="qb" />
-        )}
+        renderInput={params => <TextField {...params} label="Quarterback" variant="outlined" name="qb" />}
       />
       <Autocomplete
         id="combo-box-rb"

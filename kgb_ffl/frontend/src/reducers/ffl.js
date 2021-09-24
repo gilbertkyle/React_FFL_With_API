@@ -26,6 +26,7 @@ const initialState = {
   players: [],
   invitationsLoaded: false,
   invitations: [],
+  picks: [],
 };
 
 export default function (state = initialState, action) {
