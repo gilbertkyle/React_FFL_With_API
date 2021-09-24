@@ -18,6 +18,7 @@ django-dotenv = "*"
 python-dotenv = "*"
 django-rest-passwordreset = "*"
 cryptography = "==2.8"
+urllib3 = "==1.26.6"
 
 [requires]
 python_version = "3.7"
