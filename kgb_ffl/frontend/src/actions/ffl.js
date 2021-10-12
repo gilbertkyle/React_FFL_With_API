@@ -69,11 +69,11 @@ export const retrieveCommishLeagues = () => async (dispatch, getState) => {
   }
 };
 
-export const updatePick = (pickId, picks) => async (dispatch, getState) => {
+export const updatePick = (id, picks) => async (dispatch, getState) => {
   const body = JSON.stringify(picks);
 
   try {
-    const response = await axios.put(`/api/picks/${pickId}`, body, tokenConfig(getState));
+    const response = await axios.put(`/api/picks/${id}/`, body, tokenConfig(getState));
     dispatch({
       type: PICK_UPDATE_SUCCESS,
       payload: response.data,

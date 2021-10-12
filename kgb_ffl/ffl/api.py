@@ -106,7 +106,7 @@ class PickViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
-        pick = Pick.objects.get(id=self.kwargs['id'])
+        pick = Pick.objects.get(id=self.kwargs['pk'])
         new_picks = request.data
         pick.qb = new_picks['qb']['name']
         pick.qb_id = new_picks['qb']['id']
@@ -119,7 +119,9 @@ class PickViewSet(viewsets.ModelViewSet):
         pick.defense = new_picks['defense']['name']
         pick.defense_id = new_picks['defense']['id']
         pick.save()
-        return Response(pick, status=status.HTTP_200_OK)
+        return Response({
+            "pick": PickSerializer(pick, context=self.get_serializer_context()).data
+        }, status=status.HTTP_200_OK)
 
     def destroy(self, request, pk=None):
         response = {'message': 'Delete function is not offered in this path.'}
@@ -200,7 +202,6 @@ class LeagueViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def list(self, request, *args, **kwargs):
-        print(request.user)
         if request.user:
             queryset = self.get_queryset()
             queryset = queryset.filter(users=request.user)

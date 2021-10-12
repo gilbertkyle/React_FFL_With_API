@@ -83,6 +83,7 @@ const PickForm = ({ admin = false }) => {
       te,
       defense,
     };
+
     // check for repeat picks in this league
     if (!admin) {
       for (var i = 0; i < myPicks.length; i++) {

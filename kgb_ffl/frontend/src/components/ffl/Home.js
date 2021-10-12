@@ -9,7 +9,7 @@ import axios from "axios";
 import styled from "styled-components";
 
 const Home = props => {
-  const [name, setName] = useState("kyle");
+  const [name, setName] = useState(props.location.state?.name || "none");
   const { id } = props.match.params;
   const { week, picks, myPicks, pickSubmitted, leagues } = useSelector(state => state.ffl);
   const { user } = useSelector(state => state.auth);
