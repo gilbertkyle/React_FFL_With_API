@@ -18,7 +18,8 @@ class User(AbstractUser):
         Checks for uniqueness of email address, but allows for multiple people to have no email
         """
         if self.email != '':
-            email_exists = User.objects.filter(email=self.email).exists()
+            email_exists = User.objects.filter(
+                email=self.email).exclude(pk=self.instance.pk).exists()
 
             if email_exists:
                 raise IntegrityError(
