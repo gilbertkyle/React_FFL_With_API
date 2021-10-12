@@ -19,7 +19,7 @@ class User(AbstractUser):
         """
         if self.email != '':
             email_exists = User.objects.filter(
-                email=self.email).exclude(pk=self.instance.pk).exists()
+                email=self.email).exclude(pk=self.pk).exists()
 
             if email_exists:
                 raise IntegrityError(
