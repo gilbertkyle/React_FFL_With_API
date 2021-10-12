@@ -183,7 +183,7 @@ class LeagueViewSet(viewsets.ModelViewSet):
         league_year.save()
         # Success!
         # Now to create all of the pick objects for the creator of the league and attach them to the league year
-        user = self.request.user
+        user = request.user
 
         user.is_commissioner = True
         user.save()

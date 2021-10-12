@@ -1,17 +1,18 @@
 import React, { Component, Fragment, useState } from "react";
 import { Link } from "react-router-dom";
-import { connect, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import PickForm from "./PickForm";
-//import { Table, ButtonGroup } from "react-bootstrap";
 import { ButtonGroup, Button, Table } from "@material-ui/core";
 import { PickTable } from "./PickTable";
-import LeagueTable from "./LeagueTable";
 
 const PickDetail = props => {
   const { week, picks } = useSelector(state => state.ffl);
   const [selectedWeek, setSelectedWeek] = useState(week);
+  const leagueId = props.match.params.id;
+  console.log(picks);
+  console.log(leagueId);
 
-  const leaguePicks = picks.filter(pick => pick.week == selectedWeek);
+  const leaguePicks = picks.filter(pick => pick.week == selectedWeek && pick.league.league == leagueId);
 
   const handleClick = e => {
     setSelectedWeek(e.target.innerText);
