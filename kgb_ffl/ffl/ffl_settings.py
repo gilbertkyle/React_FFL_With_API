@@ -6,7 +6,7 @@ import datetime
 from pytz import timezone
 
 TIME_ZONE = timezone("US/Pacific")
-BASE_DATE = datetime.datetime(2021, 8, 30, 10, 0, 0, tzinfo=TIME_ZONE)
+BASE_DATE = datetime.datetime(2021, 8, 29, 10, 0, 0, tzinfo=TIME_ZONE)
 
 NUMBER_OF_WEEKS = 18
 
@@ -16,7 +16,7 @@ CURRENT_YEAR = 2021
 def get_week():
     """
     Returns the current week of the NFL
-    Set the base week to 7 days before Week 1 Sunday
+    Set the base week to 14 days before Week 1 Sunday
     """
     base_week = BASE_DATE
     today = datetime.datetime.now(TIME_ZONE)
