@@ -16,6 +16,7 @@ urlpatterns = [
     path('api/admin/picks', AdminRetrievePicksAPI.as_view()),
     path('api/current_week', get_current_week),
     path('api/current_year', get_current_year),
+    path('api/leagues/<slug:name>/', JoinLeague.as_view())
 ]
 
 urlpatterns += router.urls

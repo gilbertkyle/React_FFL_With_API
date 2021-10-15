@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 import datetime
 from rest_framework.decorators import api_view
 from .models import Invitation, League, LeagueYear, Pick, Player, Thread
-from .serializers import CreateLeagueSerializer, InvitationSerializer, LeagueSerializer, PickSerializer, PlayerSerializer, UserSerializer, UpdatePickSerializer, ThreadSerializer, PlayerDetailSerializer
+from .serializers import CreateLeagueSerializer, InvitationSerializer, JoinLeagueSerializer, LeagueSerializer, PickSerializer, PlayerSerializer, UserSerializer, UpdatePickSerializer, ThreadSerializer, PlayerDetailSerializer
 from rest_framework.response import Response
 from rest_framework import generics, permissions
 from .ffl_settings import *
@@ -172,7 +172,7 @@ class LeagueViewSet(viewsets.ModelViewSet):
     serializer_class = LeagueSerializer
     queryset = League.objects.all()
     permission_classes = [permissions.IsAuthenticated]
-    #pk_url_kwarg = 'id'
+    pk_url_kwarg = 'name'
 
     def create(self, request, *args, **kwargs):
         serializer = CreateLeagueSerializer(data=request.data)
@@ -210,6 +210,27 @@ class LeagueViewSet(viewsets.ModelViewSet):
         return League.objects.none()
 
     def update(self, request, *args, **kwargs):
+        league = League.objects.get(name=request.data['name'])
+        user = request.user
+        if check_password(request.data['password'], league.password):
+            league.users.add(user)
+            year = datetime.datetime.now().year
+            league_year = league.years.get(year=year)
+            league_year.create_picks(user)
+            league.save()
+            return Response({
+                'leagues': LeagueSerializer(league, context=self.get_serializer_context()).data
+            })
+        else:
+            return Response({'message': 'Password does not match'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class JoinLeague(generics.UpdateAPIView):
+    serializer_class = JoinLeagueSerializer
+    queryset = League.objects.all()
+
+    def update(self, request, *args, **kwargs):
+
         league = League.objects.get(name=request.data['name'])
         user = request.user
         if check_password(request.data['password'], league.password):

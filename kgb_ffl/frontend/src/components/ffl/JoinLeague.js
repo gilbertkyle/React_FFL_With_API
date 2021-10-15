@@ -36,7 +36,6 @@ const JoinLeague = props => {
   return (
     <form onSubmit={handleSubmit}>
       <div className="form-group">
-        <TextField label="Name" variant="outlined" />
         <label htmlFor="leagueNameInput">League Name</label>
         <input
           className="form-control"
