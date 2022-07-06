@@ -19,7 +19,7 @@ djangorestframework==3.12.4
 future==0.16.0
 idna==3.2
 jmespath==0.10.0
-lxml==4.5.0
+lxml==4.9.1
 nfldfs==0.0.5
 nflgame-redux==2.0.1b1
 numpy==1.21.2
